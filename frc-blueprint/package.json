@@ -14,8 +14,8 @@
   "contributes": {
     "commands": [
       {
-        "command": "frc-blueprint.helloWorld",
-        "title": "Hello World"
+        "command": "frc-generator.createSubsystem",
+        "title": "FRC: Create New Subsystem"
       }
     ]
   },
