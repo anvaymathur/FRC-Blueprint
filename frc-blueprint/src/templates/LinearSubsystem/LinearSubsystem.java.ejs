@@ -1,0 +1,80 @@
+package frc.robot.subsystems.<%= name.charAt(0).toLowerCase() + name.slice(1) %>;
+// 5409: The Chargers
+// http://github.com/FRC5409
+
+import static edu.wpi.first.units.Units.*;
+
+import org.littletonrobotics.junction.Logger;
+
+import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.units.measure.Distance;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
+
+public class <%= name.charAt(0).toUpperCase() + name.slice(1) %> extends SubsystemBase {
+    private final <%= name.charAt(0).toUpperCase() + name.slice(1) %>IO     io;
+    private final <%= name.charAt(0).toUpperCase() + name.slice(1) %>InputsAutoLogged    inputs;
+
+    private static Pose3d pose;
+
+    public <%= name.charAt(0).toUpperCase() + name.slice(1) %>(<%= name.charAt(0).toUpperCase() + name.slice(1) %>IO io) {
+        this.io = io;
+        inputs = new <%= name.charAt(0).toUpperCase() + name.slice(1) %>InputsAutoLogged();
+
+        pose = new Pose3d();
+    }
+
+    /**
+     * Sets voltage of the <%= name.charAt(0).toUpperCase() + name.slice(1) %> to the given voltage
+     *
+     * @param voltage voltage value
+     */
+    public Command setVoltage(double voltage) {
+        return Commands.runOnce(() -> io.setVoltage(voltage), this);
+    }
+
+    /**
+     * Sets the position of the <%= name.charAt(0).toUpperCase() + name.slice(1) %>
+     *
+     * @param setpoint setpoint value
+     */
+    public Command setSetpoint(Distance setpoint, int slot) {
+        return Commands.runOnce(() -> io.setSetpoint(setpoint, slot), this);
+    }
+
+    /**
+     * Zeros <%= name.charAt(0).toUpperCase() + name.slice(1) %> encoder position
+     */
+    public Command zeroEncoder() {
+        return Commands.runOnce(io::zeroEncoder, this);
+    }
+
+    /**
+     * Stop motor
+     */
+    public Command stop() {
+        return Commands.runOnce(io::stopMotor, this);
+    }
+
+    /**
+     * Gets position of the <%= name.charAt(0).toUpperCase() + name.slice(1) %>
+     *
+     * @return The encoders position
+     */
+    public Distance getPosition() {
+        return io.getPosition();
+    }
+
+    @Override
+    public void periodic() {
+        // This method will be called once per scheduler run
+        io.updateInputs(inputs);
+
+        pose = new Pose3d(0, 0, inputs.<%= name.charAt(0).toLowerCase() + name.slice(1) %>Position.in(Meters), new Rotation3d());
+        Logger.recordOutput("Components/<%= name.charAt(0).toUpperCase() + name.slice(1) %>", pose);
+
+        Logger.processInputs("<%= name.charAt(0).toUpperCase() + name.slice(1) %>", inputs);
+    }
+}

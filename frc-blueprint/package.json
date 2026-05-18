@@ -4,7 +4,7 @@
   "description": "FRC Blueprint is an interactive VS Code extension for generating WPILib robot code, commands, subsystems, and mechanism boilerplate for FRC teams.Instead of static snippets, FRC Blueprint guides you through setup with prompts and configuration options — allowing you to generate code tailored to your robot architecture. Configure things like motor count, follower motors, sensors, command structure, and more directly inside VS Code.Features include:Interactive subsystem and command generationSmart WPILib boilerplate creationConfigurable templates based on robot hardwareAutomatic file and folder generationExtensible template system for custom team workflowsFaster setup for common FRC mechanisms and patternsDesigned for command-based robot projects using WPILib and Java.",
   "version": "0.0.1",
   "engines": {
-    "vscode": "^1.118.0"
+    "vscode": "^1.102.0"
   },
   "categories": [
     "Other"
@@ -14,8 +14,8 @@
   "contributes": {
     "commands": [
       {
-        "command": "frc-blueprint.helloWorld",
-        "title": "Hello World"
+        "command": "frc-blueprint.createSubsystem",
+        "title": "FRC: Create New Subsystem"
       }
     ]
   },
@@ -34,15 +34,19 @@
     "test": "vscode-test"
   },
   "devDependencies": {
-    "@types/vscode": "^1.118.0",
+    "@types/ejs": "^3.1.5",
     "@types/mocha": "^10.0.10",
     "@types/node": "22.x",
-    "typescript-eslint": "^8.56.1",
-    "eslint": "^9.39.3",
+    "@types/vscode": "^1.118.0",
+    "@vscode/test-cli": "^0.0.12",
+    "@vscode/test-electron": "^2.5.2",
     "esbuild": "^0.27.3",
+    "eslint": "^9.39.3",
     "npm-run-all": "^4.1.5",
     "typescript": "^5.9.3",
-    "@vscode/test-cli": "^0.0.12",
-    "@vscode/test-electron": "^2.5.2"
+    "typescript-eslint": "^8.56.1"
+  },
+  "dependencies": {
+    "ejs": "^5.0.2"
   }
 }
