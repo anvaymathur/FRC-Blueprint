@@ -7,131 +7,131 @@ import ejs = require('ejs');
 // Your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
 
-	// Use the console to output diagnostic information (console.log) and errors (console.error)
-	// This line of code will only be executed once when your extension is activated
-	console.log('Congratulations, your extension "frc-blueprint" is now active!');
+    // Use the console to output diagnostic information (console.log) and errors (console.error)
+    // This line of code will only be executed once when your extension is activated
+    console.log('Congratulations, your extension "frc-blueprint" is now active!');
 
-	enum SubsystemType {
-		LINEAR_SUBSYSTEM,
-		SPINNING_SUBSYSTEM,
-		PIVOTING_SUBSYSTEM
-	}
+    enum SubsystemType {
+        LINEAR_SUBSYSTEM,
+        SPINNING_SUBSYSTEM,
+        PIVOTING_SUBSYSTEM
+    }
 
-	enum MotorTypes{
-		TALON_FX,
-		SPARK_MAX
-	}
+    enum MotorTypes {
+        TALON_FX,
+        SPARK_MAX
+    }
 
-	const subsystemMap = {
-		'Linear Mechanism': SubsystemType.LINEAR_SUBSYSTEM,
-		'Pivoting Mechanism': SubsystemType.SPINNING_SUBSYSTEM,
-		'Continuous Rotation Mechanism': SubsystemType.PIVOTING_SUBSYSTEM
-	} as const;
+    const subsystemMap = {
+        'Linear Mechanism': SubsystemType.LINEAR_SUBSYSTEM,
+        'Pivoting Mechanism': SubsystemType.SPINNING_SUBSYSTEM,
+        'Continuous Rotation Mechanism': SubsystemType.PIVOTING_SUBSYSTEM
+    } as const;
 
-	const motorMap = {
-		'TalonFX': MotorTypes.TALON_FX,
-		'SPARK MAX': MotorTypes.SPARK_MAX
-	} as const;
+    const motorMap = {
+        'TalonFX': MotorTypes.TALON_FX,
+        'SPARK MAX': MotorTypes.SPARK_MAX
+    } as const;
 
-	
-	async function generateFiles(name: string, subsystemType: SubsystemType, followerMotors: string, motorsType: MotorTypes, selectedFolder: vscode.Uri) {
-		
-		// 1. Prepare data for EJS
-		// Convert the quick pick string (e.g. "2") into a number for the EJS loop
-		const numFollowers = parseInt(followerMotors, 10) || 0;
-		const templateData = {
-			name: name,
-			numFollowers: numFollowers
-		};
 
-		// Ensure the folder is named with a lowercase first letter (camelCase)
-		const folderName = name.charAt(0).toLowerCase() + name.slice(1);
-		const folderUri = vscode.Uri.joinPath(selectedFolder, folderName);
-		
-		await vscode.workspace.fs.createDirectory(folderUri);
+    async function generateFiles(name: string, subsystemType: SubsystemType, followerMotors: string, motorsType: MotorTypes, selectedFolder: vscode.Uri) {
 
-		// Helper function to read an EJS template, render it, and write it to the new folder
-		const renderAndWrite = async (templateFileName: string, outputFileName: string) => {
-			// Matches your tree structure: src/templates/LinearSubsystem/
-			const templatePath = vscode.Uri.joinPath(context.extensionUri, 'src', 'templates', 'LinearSubsystem', templateFileName);
-			
-			try {
-				const templateBuffer = await vscode.workspace.fs.readFile(templatePath);
-				const templateString = Buffer.from(templateBuffer).toString('utf8');
-				
-				const renderedContent = ejs.render(templateString, templateData);
-				
-				const outputUri = vscode.Uri.joinPath(folderUri, outputFileName);
-				await vscode.workspace.fs.writeFile(outputUri, Buffer.from(renderedContent, 'utf8'));
-			} catch (error) {
-				vscode.window.showErrorMessage(`Failed to generate ${outputFileName}: ${error}`);
-				console.error(error);
-			}
-		};
+        // 1. Prepare data for EJS
+        // Convert the quick pick string (e.g. "2") into a number for the EJS loop
+        const numFollowers = parseInt(followerMotors, 10) || 0;
+        const templateData = {
+            name: name,
+            numFollowers: numFollowers
+        };
 
-		// Capitalize the first letter for the generated Java file names (PascalCase)
-		const className = name.charAt(0).toUpperCase() + name.slice(1);
+        // Ensure the folder is named with a lowercase first letter (camelCase)
+        const folderName = name.charAt(0).toLowerCase() + name.slice(1);
+        const folderUri = vscode.Uri.joinPath(selectedFolder, folderName);
 
-		// 2. Generate the standard subsystem files
-		await renderAndWrite('LinearSubsystem.java.ejs', `${className}.java`);
-		await renderAndWrite('LinearSubsystemIO.java.ejs', `${className}IO.java`);
-		await renderAndWrite('LinearSubsystemIOSim.java.ejs', `${className}IOSim.java`);
-		await renderAndWrite('LinearSubsystemConstants.java.ejs', `${className}Constants.java`);
+        await vscode.workspace.fs.createDirectory(folderUri);
 
-		// 3. Generate the hardware-specific file based on the motor selection
-		if (motorsType === MotorTypes.TALON_FX) {
-			await renderAndWrite('LinearSubsystemIOTalonFX.java.ejs', `${className}IOTalonFX.java`);
-		} else if (motorsType === MotorTypes.SPARK_MAX) {
-			// Ready for when you create your SparkMax templates!
-			// await renderAndWrite('LinearSubsystemIOSparkMax.java.ejs', `${className}IOSparkMax.java`);
-			vscode.window.showWarningMessage("SPARK MAX templates are not implemented yet!");
-		}
+        // Helper function to read an EJS template, render it, and write it to the new folder
+        const renderAndWrite = async (templateFileName: string, outputFileName: string) => {
+            // Matches your tree structure: src/templates/LinearSubsystem/
+            const templatePath = vscode.Uri.joinPath(context.extensionUri, 'src', 'templates', 'LinearSubsystem', templateFileName);
 
-		vscode.window.showInformationMessage(`${className} subsystem created!`);
-	}
+            try {
+                const templateBuffer = await vscode.workspace.fs.readFile(templatePath);
+                const templateString = Buffer.from(templateBuffer).toString('utf8');
 
-	// The command has been defined in the package.json file
-	// Now provide the implementation of the command with registerCommand
-	// The commandId parameter must match the command field in package.json
-	const disposable = vscode.commands.registerCommand('frc-blueprint.createSubsystem', async () => {
-		// The code you place here will be executed every time your command is executed
-		// Display a message box to the user
-		// vscode.window.showInformationMessage('Hello World from FRC Blueprint!');
-		const selection = await vscode.window.showQuickPick(Object.keys(subsystemMap), {title: "Select type of subsystem"});
-		
-		if (!selection) return;
+                const renderedContent = ejs.render(templateString, templateData);
 
-		const subsystemType = subsystemMap[selection as keyof typeof subsystemMap];
-		
-		const subsystemName = await vscode.window.showInputBox({prompt: "Enter subsystem name"});
+                const outputUri = vscode.Uri.joinPath(folderUri, outputFileName);
+                await vscode.workspace.fs.writeFile(outputUri, Buffer.from(renderedContent, 'utf8'));
+            } catch (error) {
+                vscode.window.showErrorMessage(`Failed to generate ${outputFileName}: ${error}`);
+                console.error(error);
+            }
+        };
 
-		const followerMotorCount = await vscode.window.showQuickPick(['0','1','2','3'], {placeHolder: 'How many follower motors in this subsystem?'});
-	
-		const motorsSelection = await vscode.window.showQuickPick(Object.keys(motorMap), {title: "Select type of motors"});
+        // Capitalize the first letter for the generated Java file names (PascalCase)
+        const className = name.charAt(0).toUpperCase() + name.slice(1);
 
-		if (!motorsSelection) return;
+        // 2. Generate the standard subsystem files
+        await renderAndWrite('LinearSubsystem.java.ejs', `${className}.java`);
+        await renderAndWrite('LinearSubsystemIO.java.ejs', `${className}IO.java`);
+        await renderAndWrite('LinearSubsystemIOSim.java.ejs', `${className}IOSim.java`);
+        await renderAndWrite('LinearSubsystemConstants.java.ejs', `${className}Constants.java`);
 
-		const motorsType = motorMap[motorsSelection as keyof typeof motorMap];
+        // 3. Generate the hardware-specific file based on the motor selection
+        if (motorsType === MotorTypes.TALON_FX) {
+            await renderAndWrite('LinearSubsystemIOTalonFX.java.ejs', `${className}IOTalonFX.java`);
+        } else if (motorsType === MotorTypes.SPARK_MAX) {
+            // Ready for when you create your SparkMax templates!
+            // await renderAndWrite('LinearSubsystemIOSparkMax.java.ejs', `${className}IOSparkMax.java`);
+            vscode.window.showWarningMessage("SPARK MAX templates are not implemented yet!");
+        }
 
-		const folderUri = await vscode.window.showOpenDialog({
-			canSelectFiles: false,
-			canSelectFolders: true,
-			canSelectMany: false,
-			openLabel: 'Select subsystem folder'
-		});
+        vscode.window.showInformationMessage(`${className} subsystem created!`);
+    }
 
-		if (!folderUri || folderUri.length === 0) return;
+    // The command has been defined in the package.json file
+    // Now provide the implementation of the command with registerCommand
+    // The commandId parameter must match the command field in package.json
+    const disposable = vscode.commands.registerCommand('frc-blueprint.createSubsystem', async () => {
+        // The code you place here will be executed every time your command is executed
+        // Display a message box to the user
+        // vscode.window.showInformationMessage('Hello World from FRC Blueprint!');
+        const selection = await vscode.window.showQuickPick(Object.keys(subsystemMap), { title: "Select type of subsystem" });
 
-		const selectedFolder = folderUri[0];
+        if (!selection) return;
 
-		if (subsystemName && followerMotorCount) {
+        const subsystemType = subsystemMap[selection as keyof typeof subsystemMap];
+
+        const subsystemName = await vscode.window.showInputBox({ prompt: "Enter subsystem name" });
+
+        const followerMotorCount = await vscode.window.showQuickPick(['0', '1', '2', '3'], { placeHolder: 'How many follower motors in this subsystem?' });
+
+        const motorsSelection = await vscode.window.showQuickPick(Object.keys(motorMap), { title: "Select type of motors" });
+
+        if (!motorsSelection) return;
+
+        const motorsType = motorMap[motorsSelection as keyof typeof motorMap];
+
+        const folderUri = await vscode.window.showOpenDialog({
+            canSelectFiles: false,
+            canSelectFolders: true,
+            canSelectMany: false,
+            openLabel: 'Select subsystem folder'
+        });
+
+        if (!folderUri || folderUri.length === 0) return;
+
+        const selectedFolder = folderUri[0];
+
+        if (subsystemName && followerMotorCount) {
             generateFiles(subsystemName, subsystemType, followerMotorCount, motorsType, selectedFolder);
         }
-	
-	});
 
-	context.subscriptions.push(disposable);
+    });
+
+    context.subscriptions.push(disposable);
 }
 
 // This method is called when your extension is deactivated
-export function deactivate() {}
+export function deactivate() { }
