@@ -25,7 +25,7 @@ export function activate(context: vscode.ExtensionContext) {
 	const subsystemMap = {
 		'Linear Mechanism': SubsystemType.LINEAR_SUBSYSTEM,
 		'Pivoting Mechanism': SubsystemType.SPINNING_SUBSYSTEM,
-		'Spinning Mechanism': SubsystemType.PIVOTING_SUBSYSTEM
+		'Continuous Rotation Mechanism': SubsystemType.PIVOTING_SUBSYSTEM
 	} as const;
 
 	const motorMap = {
@@ -80,7 +80,7 @@ export function activate(context: vscode.ExtensionContext) {
 
 		// 3. Generate the hardware-specific file based on the motor selection
 		if (motorsType === MotorTypes.TALON_FX) {
-			await renderAndWrite('LinearSubsystemIOTalonFx.java.ejs', `${className}IOTalonFX.java`);
+			await renderAndWrite('LinearSubsystemIOTalonFX.java.ejs', `${className}IOTalonFX.java`);
 		} else if (motorsType === MotorTypes.SPARK_MAX) {
 			// Ready for when you create your SparkMax templates!
 			// await renderAndWrite('LinearSubsystemIOSparkMax.java.ejs', `${className}IOSparkMax.java`);
@@ -120,9 +120,7 @@ export function activate(context: vscode.ExtensionContext) {
 			openLabel: 'Select subsystem folder'
 		});
 
-		if (!folderUri || folderUri.length === 0) {
-			return;
-		}
+		if (!folderUri || folderUri.length === 0) return;
 
 		const selectedFolder = folderUri[0];
 

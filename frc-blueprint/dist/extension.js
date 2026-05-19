@@ -725,9 +725,7 @@ __export(extension_exports, {
 module.exports = __toCommonJS(extension_exports);
 var vscode = __toESM(require("vscode"));
 var ejs = require_ejs();
-console.log("=== FILE LOADED ===");
 function activate(context) {
-  console.log("=== ACTIVATION TRIGGERED ===");
   console.log('Congratulations, your extension "frc-blueprint" is now active!');
   let SubsystemType;
   ((SubsystemType2) => {
@@ -743,7 +741,7 @@ function activate(context) {
   const subsystemMap = {
     "Linear Mechanism": 0 /* LINEAR_SUBSYSTEM */,
     "Pivoting Mechanism": 1 /* SPINNING_SUBSYSTEM */,
-    "Spinning Mechanism": 2 /* PIVOTING_SUBSYSTEM */
+    "Continuous Rotation Mechanism": 2 /* PIVOTING_SUBSYSTEM */
   };
   const motorMap = {
     "TalonFX": 0 /* TALON_FX */,
@@ -777,7 +775,7 @@ function activate(context) {
     await renderAndWrite("LinearSubsystemIOSim.java.ejs", `${className}IOSim.java`);
     await renderAndWrite("LinearSubsystemConstants.java.ejs", `${className}Constants.java`);
     if (motorsType === 0 /* TALON_FX */) {
-      await renderAndWrite("LinearSubsystemIOTalonFx.java.ejs", `${className}IOTalonFX.java`);
+      await renderAndWrite("LinearSubsystemIOTalonFX.java.ejs", `${className}IOTalonFX.java`);
     } else if (motorsType === 1 /* SPARK_MAX */) {
       vscode.window.showWarningMessage("SPARK MAX templates are not implemented yet!");
     }
@@ -798,9 +796,7 @@ function activate(context) {
       canSelectMany: false,
       openLabel: "Select subsystem folder"
     });
-    if (!folderUri || folderUri.length === 0) {
-      return;
-    }
+    if (!folderUri || folderUri.length === 0) return;
     const selectedFolder = folderUri[0];
     if (subsystemName && followerMotorCount) {
       generateFiles(subsystemName, subsystemType, followerMotorCount, motorsType, selectedFolder);
