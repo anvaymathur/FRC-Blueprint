@@ -36,6 +36,27 @@ export function activate(context: vscode.ExtensionContext) {
 
     async function generateFiles(name: string, subsystemType: SubsystemType, followerMotors: string, motorsType: MotorTypes, selectedFolder: vscode.Uri) {
 
+        // Determine template folder and file prefix based on the selected subsystem type
+        let templateFolder = "";
+        let templatePrefix = "";
+
+        switch (subsystemType) {
+            case SubsystemType.LINEAR_SUBSYSTEM:
+                templateFolder = "LinearSubsystem";
+                templatePrefix = "LinearSubsystem";
+                break;
+            case SubsystemType.PIVOTING_SUBSYSTEM: // Mapped to 'Continuous Rotation Mechanism'
+                templateFolder = "continuousRotationSubsystem";
+                templatePrefix = "ContinuousRotationSubsystem";
+                break;
+            case SubsystemType.SPINNING_SUBSYSTEM: // Mapped to 'Pivoting Mechanism'
+                vscode.window.showWarningMessage("Pivoting mechanism templates are not implemented yet!");
+                return;
+            default:
+                vscode.window.showErrorMessage("Unknown subsystem type selected.");
+                return;
+        }
+
         // 1. Prepare data for EJS
         // Convert the quick pick string (e.g. "2") into a number for the EJS loop
         const numFollowers = parseInt(followerMotors, 10) || 0;
@@ -52,8 +73,8 @@ export function activate(context: vscode.ExtensionContext) {
 
         // Helper function to read an EJS template, render it, and write it to the new folder
         const renderAndWrite = async (templateFileName: string, outputFileName: string) => {
-            // Matches your tree structure: src/templates/LinearSubsystem/
-            const templatePath = vscode.Uri.joinPath(context.extensionUri, 'src', 'templates', 'LinearSubsystem', templateFileName);
+            // Dynamically inject the correct template folder here
+            const templatePath = vscode.Uri.joinPath(context.extensionUri, 'src', 'templates', templateFolder, templateFileName);
 
             try {
                 const templateBuffer = await vscode.workspace.fs.readFile(templatePath);
@@ -72,18 +93,18 @@ export function activate(context: vscode.ExtensionContext) {
         // Capitalize the first letter for the generated Java file names (PascalCase)
         const className = name.charAt(0).toUpperCase() + name.slice(1);
 
-        // 2. Generate the standard subsystem files
-        await renderAndWrite('LinearSubsystem.java.ejs', `${className}.java`);
-        await renderAndWrite('LinearSubsystemIO.java.ejs', `${className}IO.java`);
-        await renderAndWrite('LinearSubsystemIOSim.java.ejs', `${className}IOSim.java`);
-        await renderAndWrite('LinearSubsystemConstants.java.ejs', `${className}Constants.java`);
+        // 2. Generate the standard subsystem files dynamically
+        await renderAndWrite(`${templatePrefix}.java.ejs`, `${className}.java`);
+        await renderAndWrite(`${templatePrefix}IO.java.ejs`, `${className}IO.java`);
+        await renderAndWrite(`${templatePrefix}IOSim.java.ejs`, `${className}IOSim.java`);
+        await renderAndWrite(`${templatePrefix}Constants.java.ejs`, `${className}Constants.java`);
 
         // 3. Generate the hardware-specific file based on the motor selection
         if (motorsType === MotorTypes.TALON_FX) {
-            await renderAndWrite('LinearSubsystemIOTalonFX.java.ejs', `${className}IOTalonFX.java`);
+            await renderAndWrite(`${templatePrefix}IOTalonFX.java.ejs`, `${className}IOTalonFX.java`);
         } else if (motorsType === MotorTypes.SPARK_MAX) {
             // Ready for when you create your SparkMax templates!
-            // await renderAndWrite('LinearSubsystemIOSparkMax.java.ejs', `${className}IOSparkMax.java`);
+            // await renderAndWrite(`${templatePrefix}IOSparkMax.java.ejs`, `${className}IOSparkMax.java`);
             vscode.window.showWarningMessage("SPARK MAX templates are not implemented yet!");
         }
 
