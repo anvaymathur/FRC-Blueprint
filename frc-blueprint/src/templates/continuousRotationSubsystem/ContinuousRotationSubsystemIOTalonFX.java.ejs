@@ -1,0 +1,230 @@
+package frc.robot.subsystems.<%= name.charAt(0).toLowerCase() + name.slice(1) %>;
+
+import static edu.wpi.first.units.Units.*;
+
+import com.ctre.phoenix6.BaseStatusSignal;
+import com.ctre.phoenix6.StatusSignal;
+import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
+import com.ctre.phoenix6.configs.FeedbackConfigs;
+import com.ctre.phoenix6.configs.MotorOutputConfigs;
+import com.ctre.phoenix6.configs.Slot0Configs;
+import com.ctre.phoenix6.configs.TalonFXConfigurator;
+import com.ctre.phoenix6.controls.Follower;
+import com.ctre.phoenix6.controls.VelocityVoltage;
+import com.ctre.phoenix6.hardware.TalonFX;
+
+import edu.wpi.first.units.measure.AngularVelocity;
+import edu.wpi.first.units.measure.Current;
+import edu.wpi.first.units.measure.Temperature;
+import edu.wpi.first.units.measure.Voltage;
+import frc.robot.util.PhoenixUtil;
+
+public class <%= name.charAt(0).toUpperCase() + name.slice(1) %>IOTalonFX implements <%= name.charAt(0).toUpperCase() + name.slice(1) %>IO{
+
+    private final TalonFX mainMotor;
+<% for (let i = 1; i <= numFollowers; i++) { %>
+    private final TalonFX followerMotor<%= i %>;
+<% } %>
+
+    private final VelocityVoltage velocityVoltageRequest;
+
+    private final StatusSignal<Voltage>                 mainMotorVoltage;
+    private final StatusSignal<Temperature>             mainMotorTemperature;
+    private final StatusSignal<AngularVelocity>         mainMotorVelocity;
+    private final StatusSignal<Current>                 mainMotorSupplyCurrent;
+    private final StatusSignal<Current>                 mainMotorTorqueCurrent;
+    private final StatusSignal<Current>                 mainMotorStatorCurrent;
+
+<% for (let i = 1; i <= numFollowers; i++) { %>
+    private final StatusSignal<Voltage>                 followerMotor<%= i %>Voltage;
+    private final StatusSignal<Temperature>             followerMotor<%= i %>Temperature;
+    private final StatusSignal<AngularVelocity>         followerMotor<%= i %>Velocity;
+    private final StatusSignal<Current>                 followerMotor<%= i %>SupplyCurrent;
+    private final StatusSignal<Current>                 followerMotor<%= i %>TorqueCurrent;
+    private final StatusSignal<Current>                 followerMotor<%= i %>StatorCurrent;
+    
+<% } %>
+
+    public <%= name.charAt(0).toUpperCase() + name.slice(1) %>IOTalonFX(int mainMotorCANid<% for (let i = 1; i <= numFollowers; i++) { %>, int followerMotor<%= i %>CANid<% } %>){
+        mainMotor = new TalonFX(mainMotorCANid);
+<% for (let i = 1; i <= numFollowers; i++) { %>
+        followerMotor<%= i %> = new TalonFX(followerMotor<%= i %>CANid);
+<% } %>
+
+        TalonFXConfigurator mainConfig = mainMotor.getConfigurator();
+<% for (let i = 1; i <= numFollowers; i++) { %>
+        TalonFXConfigurator follower<%= i %>Config = followerMotor<%= i %>.getConfigurator();
+<% } %>
+
+        // Modify this config to add additional current limits as needed;
+        CurrentLimitsConfigs currentLimitConfig = new CurrentLimitsConfigs()
+                                                    .withSupplyCurrentLimit(<%= name.charAt(0).toUpperCase() + name.slice(1) %>Constants.SUPPLY_CURRENT_LIMIT.in(Amps))
+                                                    .withSupplyCurrentLimitEnable(<%= name.charAt(0).toUpperCase() + name.slice(1) %>Constants.SUPPLY_CURRENT_LIMIT_ENABLE);
+
+        mainConfig.apply(currentLimitConfig);
+<% for (let i = 1; i <= numFollowers; i++) { %>
+        follower<%= i %>Config.apply(currentLimitConfig);
+<% } %>
+
+        // Modify this config to add additional encoders or additional gear ratios as needed
+        FeedbackConfigs feedbackConfigs = new FeedbackConfigs()
+                                            .withSensorToMechanismRatio(<%= name.charAt(0).toUpperCase() + name.slice(1) %>Constants.SENSOR_TO_MECHANISM_GEAR_RATIO);
+
+        mainConfig.apply(feedbackConfigs);
+<% for (let i = 1; i <= numFollowers; i++) { %>
+        follower<%= i %>Config.apply(feedbackConfigs);
+<% } %>
+
+        // Modify this config to add additional feedforwards as needed
+        Slot0Configs pidSlot0Configs = new Slot0Configs()
+                                        .withKP(<%= name.charAt(0).toUpperCase() + name.slice(1) %>Constants.PID_CONSTANTS.kP)
+                                        .withKI(<%= name.charAt(0).toUpperCase() + name.slice(1) %>Constants.PID_CONSTANTS.kI)
+                                        .withKD(<%= name.charAt(0).toUpperCase() + name.slice(1) %>Constants.PID_CONSTANTS.kD)
+                                        .withKV(<%= name.charAt(0).toUpperCase() + name.slice(1) %>Constants.kV)
+                                        .withKS(<%= name.charAt(0).toUpperCase() + name.slice(1) %>Constants.kS);
+
+        mainConfig.apply(pidSlot0Configs);
+<% for (let i = 1; i <= numFollowers; i++) { %>
+        follower<%= i %>Config.apply(pidSlot0Configs);
+<% } %>
+
+        MotorOutputConfigs motorOutputConfigs = new MotorOutputConfigs()
+                                                    .withInverted(<%= name.charAt(0).toUpperCase() + name.slice(1) %>Constants.MAIN_MOTOR_INVERTED_VALUE)
+                                                    .withNeutralMode(<%= name.charAt(0).toUpperCase() + name.slice(1) %>Constants.MAIN_MOTOR_NEUTRAL_MODE_VALUE);
+
+        mainConfig.apply(motorOutputConfigs);
+<% for (let i = 1; i <= numFollowers; i++) { %>
+        follower<%= i %>Config.apply(motorOutputConfigs);
+<% } %>
+
+<% for (let i = 1; i <= numFollowers; i++) { %>
+        followerMotor<%= i %>.setControl(new Follower(mainMotorCANid, <%= name.charAt(0).toUpperCase() + name.slice(1) %>Constants.FOLLOWER_<%= i %>_MOTOR_ALIGNMENT_VALUE));
+<% } %>
+
+        velocityVoltageRequest = new VelocityVoltage(0)
+                                    .withSlot(0);
+
+        mainMotorVoltage        = mainMotor.getMotorVoltage();
+        mainMotorTemperature    = mainMotor.getDeviceTemp();
+        mainMotorVelocity       = mainMotor.getVelocity();
+        mainMotorSupplyCurrent  = mainMotor.getSupplyCurrent();
+        mainMotorStatorCurrent  = mainMotor.getStatorCurrent();
+        mainMotorTorqueCurrent  = mainMotor.getTorqueCurrent();
+
+<% for (let i = 1; i <= numFollowers; i++) { %>
+        followerMotor<%= i %>Voltage        = followerMotor<%= i %>.getMotorVoltage();
+        followerMotor<%= i %>Temperature    = followerMotor<%= i %>.getDeviceTemp();
+        followerMotor<%= i %>Velocity       = followerMotor<%= i %>.getVelocity();
+        followerMotor<%= i %>SupplyCurrent  = followerMotor<%= i %>.getSupplyCurrent();
+        followerMotor<%= i %>StatorCurrent  = followerMotor<%= i %>.getStatorCurrent();
+        followerMotor<%= i %>TorqueCurrent  = followerMotor<%= i %>.getTorqueCurrent();
+<% } %>
+
+        BaseStatusSignal.setUpdateFrequencyForAll(
+            50, 
+            mainMotorVoltage,
+            mainMotorTemperature,
+            mainMotorVelocity,
+            mainMotorSupplyCurrent,
+            mainMotorStatorCurrent,
+            mainMotorTorqueCurrent<% if (numFollowers > 0) { %>,<% } %>
+<% for (let i = 1; i <= numFollowers; i++) { %>
+            followerMotor<%= i %>Voltage,
+            followerMotor<%= i %>Temperature,
+            followerMotor<%= i %>Velocity,
+            followerMotor<%= i %>SupplyCurrent,
+            followerMotor<%= i %>StatorCurrent,
+            followerMotor<%= i %>TorqueCurrent<%= (i === numFollowers) ? '' : ',' %>
+<% } %>
+        );
+
+        mainMotor.optimizeBusUtilization();
+<% for (let i = 1; i <= numFollowers; i++) { %>
+        followerMotor<%= i %>.optimizeBusUtilization();
+<% } %>
+    }
+
+    /**
+     * set motor to assigned voltage
+     *
+     * @param volts assigned voltage
+     */
+    @Override
+    public void setVoltage(double volts) {
+        mainMotor.setVoltage(volts);
+    }
+
+    /**
+     * Stop the motor
+     */
+    @Override
+    public void stopMotor() {
+        mainMotor.stopMotor();
+    }
+
+    /**
+     * return encoder values
+     *
+     * @return encoder values
+     */
+    @Override
+    public AngularVelocity getVelocity() {
+        return mainMotor.getVelocity().getValue();
+    }
+
+    /**
+     * set motor position to assigned setpoint using pid constants from assigned slot
+     *
+     * @param setpoint setpoint value
+     * @param slot pid constants slot
+     */
+    @Override
+    public void setSetpoint(AngularVelocity setpoint, int slot) {
+        PhoenixUtil.tryUntilOk(
+            3, 
+            () -> mainMotor.setControl(
+                velocityVoltageRequest
+                    .withVelocity(setpoint)
+                    .withSlot(slot)
+                )
+        );
+    }
+
+    @Override
+    public void updateInputs(<%= name.charAt(0).toUpperCase() + name.slice(1) %>Inputs inputs){
+        inputs.is<%= name.charAt(0).toUpperCase() + name.slice(1) %>Connected   = BaseStatusSignal.refreshAll(
+            mainMotorVoltage,
+            mainMotorTemperature,
+            mainMotorVelocity,
+            mainMotorSupplyCurrent,
+            mainMotorStatorCurrent,
+            mainMotorTorqueCurrent
+        ).isOK();
+
+        inputs.<%= name.charAt(0).toLowerCase() + name.slice(1) %>Voltage       = mainMotorVoltage.getValue();
+        inputs.<%= name.charAt(0).toLowerCase() + name.slice(1) %>Temperature   = mainMotorTemperature.getValueAsDouble();
+        inputs.<%= name.charAt(0).toLowerCase() + name.slice(1) %>Velocity      = mainMotorVelocity.getValue();
+        inputs.<%= name.charAt(0).toLowerCase() + name.slice(1) %>SupplyCurrent = mainMotorSupplyCurrent.getValue();
+        inputs.<%= name.charAt(0).toLowerCase() + name.slice(1) %>StatorCurrent = mainMotorStatorCurrent.getValue();
+        inputs.<%= name.charAt(0).toLowerCase() + name.slice(1) %>TorqueCurrent = mainMotorTorqueCurrent.getValue();
+
+<% for (let i = 1; i <= numFollowers; i++) { %>
+        inputs.is<%= name.charAt(0).toUpperCase() + name.slice(1) %>Follower<%= i %>Connected   = BaseStatusSignal.refreshAll(
+            followerMotor<%= i %>Voltage,
+            followerMotor<%= i %>Temperature,
+            followerMotor<%= i %>Velocity,
+            followerMotor<%= i %>SupplyCurrent,
+            followerMotor<%= i %>StatorCurrent,
+            followerMotor<%= i %>TorqueCurrent
+        ).isOK();
+
+        inputs.<%= name.charAt(0).toLowerCase() + name.slice(1) %>Follower<%= i %>Voltage       = followerMotor<%= i %>Voltage.getValue();
+        inputs.<%= name.charAt(0).toLowerCase() + name.slice(1) %>Follower<%= i %>Temperature   = followerMotor<%= i %>Temperature.getValueAsDouble();
+        inputs.<%= name.charAt(0).toLowerCase() + name.slice(1) %>Follower<%= i %>Velocity      = followerMotor<%= i %>Velocity.getValue();
+        inputs.<%= name.charAt(0).toLowerCase() + name.slice(1) %>Follower<%= i %>SupplyCurrent = followerMotor<%= i %>SupplyCurrent.getValue();
+        inputs.<%= name.charAt(0).toLowerCase() + name.slice(1) %>Follower<%= i %>StatorCurrent = followerMotor<%= i %>StatorCurrent.getValue();
+        inputs.<%= name.charAt(0).toLowerCase() + name.slice(1) %>Follower<%= i %>TorqueCurrent = followerMotor<%= i %>TorqueCurrent.getValue();
+<% } %>
+    }
+
+}

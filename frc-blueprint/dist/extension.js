@@ -748,6 +748,24 @@ function activate(context) {
     "SPARK MAX": 1 /* SPARK_MAX */
   };
   async function generateFiles(name, subsystemType, followerMotors, motorsType, selectedFolder) {
+    let templateFolder = "";
+    let templatePrefix = "";
+    switch (subsystemType) {
+      case 0 /* LINEAR_SUBSYSTEM */:
+        templateFolder = "LinearSubsystem";
+        templatePrefix = "LinearSubsystem";
+        break;
+      case 2 /* PIVOTING_SUBSYSTEM */:
+        templateFolder = "continuousRotationSubsystem";
+        templatePrefix = "ContinuousRotationSubsystem";
+        break;
+      case 1 /* SPINNING_SUBSYSTEM */:
+        vscode.window.showWarningMessage("Pivoting mechanism templates are not implemented yet!");
+        return;
+      default:
+        vscode.window.showErrorMessage("Unknown subsystem type selected.");
+        return;
+    }
     const numFollowers = parseInt(followerMotors, 10) || 0;
     const templateData = {
       name,
@@ -757,7 +775,7 @@ function activate(context) {
     const folderUri = vscode.Uri.joinPath(selectedFolder, folderName);
     await vscode.workspace.fs.createDirectory(folderUri);
     const renderAndWrite = async (templateFileName, outputFileName) => {
-      const templatePath = vscode.Uri.joinPath(context.extensionUri, "src", "templates", "LinearSubsystem", templateFileName);
+      const templatePath = vscode.Uri.joinPath(context.extensionUri, "src", "templates", templateFolder, templateFileName);
       try {
         const templateBuffer = await vscode.workspace.fs.readFile(templatePath);
         const templateString = Buffer.from(templateBuffer).toString("utf8");
@@ -770,12 +788,12 @@ function activate(context) {
       }
     };
     const className = name.charAt(0).toUpperCase() + name.slice(1);
-    await renderAndWrite("LinearSubsystem.java.ejs", `${className}.java`);
-    await renderAndWrite("LinearSubsystemIO.java.ejs", `${className}IO.java`);
-    await renderAndWrite("LinearSubsystemIOSim.java.ejs", `${className}IOSim.java`);
-    await renderAndWrite("LinearSubsystemConstants.java.ejs", `${className}Constants.java`);
+    await renderAndWrite(`${templatePrefix}.java.ejs`, `${className}.java`);
+    await renderAndWrite(`${templatePrefix}IO.java.ejs`, `${className}IO.java`);
+    await renderAndWrite(`${templatePrefix}IOSim.java.ejs`, `${className}IOSim.java`);
+    await renderAndWrite(`${templatePrefix}Constants.java.ejs`, `${className}Constants.java`);
     if (motorsType === 0 /* TALON_FX */) {
-      await renderAndWrite("LinearSubsystemIOTalonFX.java.ejs", `${className}IOTalonFX.java`);
+      await renderAndWrite(`${templatePrefix}IOTalonFX.java.ejs`, `${className}IOTalonFX.java`);
     } else if (motorsType === 1 /* SPARK_MAX */) {
       vscode.window.showWarningMessage("SPARK MAX templates are not implemented yet!");
     }

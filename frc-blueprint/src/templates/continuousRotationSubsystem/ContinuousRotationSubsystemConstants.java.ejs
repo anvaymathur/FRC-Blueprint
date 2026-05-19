@@ -1,0 +1,42 @@
+package frc.robot.subsystems.<%= name.charAt(0).toLowerCase() + name.slice(1) %>;
+
+import static edu.wpi.first.units.Units.*;
+
+import com.ctre.phoenix6.signals.InvertedValue;
+import com.ctre.phoenix6.signals.MotorAlignmentValue;
+import com.ctre.phoenix6.signals.NeutralModeValue;
+import com.pathplanner.lib.config.PIDConstants;
+
+import edu.wpi.first.units.measure.Current;
+
+public final class <%= name.charAt(0).toUpperCase() + name.slice(1) %>Constants {
+    public static final Current SUPPLY_CURRENT_LIMIT = Amps.of(30);
+    public static final boolean SUPPLY_CURRENT_LIMIT_ENABLE = true;
+
+    public static final double SENSOR_TO_MECHANISM_GEAR_RATIO = 1.0/1.0;
+
+    public static final PIDConstants PID_CONSTANTS = new PIDConstants(
+                                                        0,
+                                                        0,
+                                                        0
+                                                    );
+    public static final double kS = 0.0;
+    public static final double kV = 0.0;
+
+    public static final InvertedValue MAIN_MOTOR_INVERTED_VALUE = InvertedValue.CounterClockwise_Positive;
+    public static final NeutralModeValue MAIN_MOTOR_NEUTRAL_MODE_VALUE = NeutralModeValue.Coast;
+
+<% for (let i = 1; i <= numFollowers; i++) { %>
+    public static final MotorAlignmentValue FOLLOWER_<%= i %>_MOTOR_ALIGNMENT_VALUE = MotorAlignmentValue.Opposed;
+<% } %>
+
+    public static class SimConstants {
+        public static final double   FLYWHEEL_INERTIA = 0.0;
+        
+        public static final PIDConstants SIM_PID_CONSTANTS = new PIDConstants(
+                                                                0,
+                                                                0,
+                                                                0
+                                                            );
+    } 
+}

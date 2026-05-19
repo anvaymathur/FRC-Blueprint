@@ -1,0 +1,47 @@
+package frc.robot.subsystems.<%= name.charAt(0).toLowerCase() + name.slice(1) %>;
+
+import static edu.wpi.first.units.Units.*;
+
+import org.littletonrobotics.junction.AutoLog;
+
+import edu.wpi.first.units.measure.AngularVelocity;
+import edu.wpi.first.units.measure.Current;
+import edu.wpi.first.units.measure.Voltage;
+
+public interface <%= name.charAt(0).toUpperCase() + name.slice(1) %>IO {
+
+    @AutoLog
+    class <%= name.charAt(0).toUpperCase() + name.slice(1) %>Inputs {
+
+        public boolean          is<%= name.charAt(0).toUpperCase() + name.slice(1) %>Connected              = false;
+        public Voltage          <%= name.charAt(0).toLowerCase() + name.slice(1) %>Voltage                  = Volts.of(0.0);
+        public double           <%= name.charAt(0).toLowerCase() + name.slice(1) %>Temperature              = 0.0;
+        public AngularVelocity  <%= name.charAt(0).toLowerCase() + name.slice(1) %>Velocity                 = RotationsPerSecond.of(0.0);
+        public Current          <%= name.charAt(0).toLowerCase() + name.slice(1) %>SupplyCurrent            = Amps.of(0.0);
+        public Current          <%= name.charAt(0).toLowerCase() + name.slice(1) %>StatorCurrent            = Amps.of(0.0);
+        public Current          <%= name.charAt(0).toLowerCase() + name.slice(1) %>TorqueCurrent            = Amps.of(0.0);
+
+<% for (let i = 1; i <= numFollowers; i++) { %>
+        public boolean          is<%= name.charAt(0).toUpperCase() + name.slice(1) %>Follower<%= i %>Connected     = false;
+        public Voltage          <%= name.charAt(0).toLowerCase() + name.slice(1) %>Follower<%= i %>Voltage         = Volts.of(0.0);
+        public double           <%= name.charAt(0).toLowerCase() + name.slice(1) %>Follower<%= i %>Temperature     = 0.0;
+        public AngularVelocity  <%= name.charAt(0).toLowerCase() + name.slice(1) %>Follower<%= i %>Velocity        = RotationsPerSecond.of(0.0);
+        public Current          <%= name.charAt(0).toLowerCase() + name.slice(1) %>Follower<%= i %>SupplyCurrent   = Amps.of(0.0);
+        public Current          <%= name.charAt(0).toLowerCase() + name.slice(1) %>Follower<%= i %>StatorCurrent   = Amps.of(0.0);
+        public Current          <%= name.charAt(0).toLowerCase() + name.slice(1) %>Follower<%= i %>TorqueCurrent   = Amps.of(0.0);
+<% } %>
+    }
+
+    default void setVoltage(double voltage) {}
+
+    default void stopMotor() {}
+
+    default AngularVelocity getVelocity() {
+        return RotationsPerSecond.of(0.0);
+    }
+
+    default void setSetpoint(AngularVelocity setpoint, int slot) {}
+
+    default void updateInputs(<%= name.charAt(0).toUpperCase() + name.slice(1) %>Inputs inputs) {}
+    
+}
