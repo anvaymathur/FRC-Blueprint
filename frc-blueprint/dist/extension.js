@@ -740,8 +740,8 @@ function activate(context) {
   })(MotorTypes || (MotorTypes = {}));
   const subsystemMap = {
     "Linear Mechanism": 0 /* LINEAR_SUBSYSTEM */,
-    "Pivoting Mechanism": 1 /* SPINNING_SUBSYSTEM */,
-    "Continuous Rotation Mechanism": 2 /* PIVOTING_SUBSYSTEM */
+    "Pivoting Mechanism": 2 /* PIVOTING_SUBSYSTEM */,
+    "Continuous Rotation Mechanism": 1 /* SPINNING_SUBSYSTEM */
   };
   const motorMap = {
     "TalonFX": 0 /* TALON_FX */,
@@ -752,16 +752,17 @@ function activate(context) {
     let templatePrefix = "";
     switch (subsystemType) {
       case 0 /* LINEAR_SUBSYSTEM */:
-        templateFolder = "LinearSubsystem";
+        templateFolder = "linearSubsystem";
         templatePrefix = "LinearSubsystem";
         break;
-      case 2 /* PIVOTING_SUBSYSTEM */:
+      case 1 /* SPINNING_SUBSYSTEM */:
         templateFolder = "continuousRotationSubsystem";
         templatePrefix = "ContinuousRotationSubsystem";
         break;
-      case 1 /* SPINNING_SUBSYSTEM */:
-        vscode.window.showWarningMessage("Pivoting mechanism templates are not implemented yet!");
-        return;
+      case 2 /* PIVOTING_SUBSYSTEM */:
+        templateFolder = "pivotingSubsystem";
+        templatePrefix = "pivotingSubsystem";
+        break;
       default:
         vscode.window.showErrorMessage("Unknown subsystem type selected.");
         return;

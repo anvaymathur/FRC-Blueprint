@@ -5,7 +5,6 @@ import static edu.wpi.first.units.Units.*;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.system.plant.DCMotor;
-import edu.wpi.first.units.Units;
 import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.wpilibj.simulation.ElevatorSim;
 import edu.wpi.first.wpilibj.simulation.RoboRioSim;
@@ -102,8 +101,8 @@ public class <%= name.charAt(0).toUpperCase() + name.slice(1) %>IOSim implements
 
         inputs.is<%= name.charAt(0).toUpperCase() + name.slice(1) %>Connected = true;
         inputs.<%= name.charAt(0).toLowerCase() + name.slice(1) %>Voltage = Volts.of(volts);
-        inputs.<%= name.charAt(0).toLowerCase() + name.slice(1) %>Position = Units.Meters.of(<%= name.charAt(0).toLowerCase() + name.slice(1) %>.getPositionMeters());
-        inputs.<%= name.charAt(0).toLowerCase() + name.slice(1) %>SupplyCurrent = Units.Amps.of(Math.abs(current));
+        inputs.<%= name.charAt(0).toLowerCase() + name.slice(1) %>Position = Meters.of(<%= name.charAt(0).toLowerCase() + name.slice(1) %>.getPositionMeters());
+        inputs.<%= name.charAt(0).toLowerCase() + name.slice(1) %>SupplyCurrent = Amps.of(current);
 
     }    
 }

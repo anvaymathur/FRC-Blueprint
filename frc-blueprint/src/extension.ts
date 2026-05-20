@@ -24,8 +24,8 @@ export function activate(context: vscode.ExtensionContext) {
 
     const subsystemMap = {
         'Linear Mechanism': SubsystemType.LINEAR_SUBSYSTEM,
-        'Pivoting Mechanism': SubsystemType.SPINNING_SUBSYSTEM,
-        'Continuous Rotation Mechanism': SubsystemType.PIVOTING_SUBSYSTEM
+        'Pivoting Mechanism': SubsystemType.PIVOTING_SUBSYSTEM,
+        'Continuous Rotation Mechanism': SubsystemType.SPINNING_SUBSYSTEM
     } as const;
 
     const motorMap = {
@@ -42,16 +42,17 @@ export function activate(context: vscode.ExtensionContext) {
 
         switch (subsystemType) {
             case SubsystemType.LINEAR_SUBSYSTEM:
-                templateFolder = "LinearSubsystem";
+                templateFolder = "linearSubsystem";
                 templatePrefix = "LinearSubsystem";
                 break;
-            case SubsystemType.PIVOTING_SUBSYSTEM: // Mapped to 'Continuous Rotation Mechanism'
+            case SubsystemType.SPINNING_SUBSYSTEM: // Mapped to 'Continuous Rotation Mechanism'
                 templateFolder = "continuousRotationSubsystem";
                 templatePrefix = "ContinuousRotationSubsystem";
                 break;
-            case SubsystemType.SPINNING_SUBSYSTEM: // Mapped to 'Pivoting Mechanism'
-                vscode.window.showWarningMessage("Pivoting mechanism templates are not implemented yet!");
-                return;
+            case SubsystemType.PIVOTING_SUBSYSTEM: // Mapped to 'Pivoting Mechanism'
+                templateFolder = "pivotingSubsystem";
+                templatePrefix = "pivotingSubsystem";
+                break;
             default:
                 vscode.window.showErrorMessage("Unknown subsystem type selected.");
                 return;
