@@ -11,13 +11,14 @@ import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
-import edu.wpi.first.units.measure.Distance;
+import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 
 public class <%= name.charAt(0).toUpperCase() + name.slice(1) %> extends SubsystemBase {
-    private final <%= name.charAt(0).toUpperCase() + name.slice(1) %>IO     io;
-    private final <%= name.charAt(0).toUpperCase() + name.slice(1) %>InputsAutoLogged    inputs;
+
+    private final <%= name.charAt(0).toUpperCase() + name.slice(1) %>IO                   io;
+    private final <%= name.charAt(0).toUpperCase() + name.slice(1) %>InputsAutoLogged     inputs;
 
     private static Pose3d pose;
 
@@ -42,7 +43,7 @@ public class <%= name.charAt(0).toUpperCase() + name.slice(1) %> extends Subsyst
      *
      * @param setpoint setpoint value
      */
-    public Command setSetpoint(Distance setpoint, int slot) {
+    public Command setSetpoint(Angle setpoint, int slot) {
         return Commands.runOnce(() -> io.setSetpoint(setpoint, slot), this);
     }
 
@@ -65,7 +66,7 @@ public class <%= name.charAt(0).toUpperCase() + name.slice(1) %> extends Subsyst
      *
      * @return The encoders position
      */
-    public Distance getPosition() {
+    public Angle getPosition() {
         return io.getPosition();
     }
 
@@ -74,7 +75,7 @@ public class <%= name.charAt(0).toUpperCase() + name.slice(1) %> extends Subsyst
         // This method will be called once per scheduler run
         io.updateInputs(inputs);
 
-        pose = new Pose3d(0, 0, inputs.<%= name.charAt(0).toLowerCase() + name.slice(1) %>Position.in(Meters), new Rotation3d());
+        pose = new Pose3d(0, 0, 0, new Rotation3d(0,getPosition().in(Radians),0));
         Logger.recordOutput("Components/<%= name.charAt(0).toUpperCase() + name.slice(1) %>", pose);
 
         Logger.processInputs("<%= name.charAt(0).toUpperCase() + name.slice(1) %>", inputs);

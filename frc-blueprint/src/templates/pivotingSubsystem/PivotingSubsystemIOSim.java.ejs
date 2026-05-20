@@ -1,0 +1,126 @@
+package frc.robot.subsystems.<%= name.charAt(0).toLowerCase() + name.slice(1) %>;
+
+import static edu.wpi.first.units.Units.*;
+
+import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.controller.ArmFeedforward;
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.system.plant.DCMotor;
+import edu.wpi.first.units.measure.Angle;
+import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
+
+public class <%= name.charAt(0).toUpperCase() + name.slice(1) %>IOSim implements <%= name.charAt(0).toUpperCase() + name.slice(1) %>IO {
+    
+    private boolean isRunning;
+
+    private final SingleJointedArmSim <%= name.charAt(0).toLowerCase() + name.slice(1) %>Sim;
+    private final PIDController pidController;
+    private final ArmFeedforward feedforward;
+
+    public <%= name.charAt(0).toUpperCase() + name.slice(1) %>IOSim(){
+
+        <%= name.charAt(0).toLowerCase() + name.slice(1) %>Sim = new SingleJointedArmSim(
+            DCMotor.getKrakenX60(<%= 1 + numFollowers %>), 
+            <%= name.charAt(0).toUpperCase() + name.slice(1) %>Constants.SENSOR_TO_MECHANISM_GEAR_RATIO, 
+            <%= name.charAt(0).toUpperCase() + name.slice(1) %>Constants.SimConstants.MOI.in(KilogramSquareMeters), 
+            <%= name.charAt(0).toUpperCase() + name.slice(1) %>Constants.SimConstants.LENGTH.in(Meters), 
+            <%= name.charAt(0).toUpperCase() + name.slice(1) %>Constants.SimConstants.MIN_ANGLE.in(Radians), 
+            <%= name.charAt(0).toUpperCase() + name.slice(1) %>Constants.SimConstants.MAX_ANGLE.in(Radians), 
+            true, 
+            0
+        );
+
+        pidController = new PIDController(
+            <%= name.charAt(0).toUpperCase() + name.slice(1) %>Constants.SimConstants.SIM_PID_CONSTANTS.kP, 
+            <%= name.charAt(0).toUpperCase() + name.slice(1) %>Constants.SimConstants.SIM_PID_CONSTANTS.kI, 
+            <%= name.charAt(0).toUpperCase() + name.slice(1) %>Constants.SimConstants.SIM_PID_CONSTANTS.kD
+        );
+
+        feedforward = new ArmFeedforward(
+            0, 
+            <%= name.charAt(0).toUpperCase() + name.slice(1) %>Constants.SimConstants.SIM_kG, 
+            0
+        );
+
+        isRunning = true;
+
+        setSetpoint(Radians.of(0), 0);
+
+    }
+
+    /**
+     * set motor to assigned voltage
+     *
+     * @param volts assigned voltage
+     */
+    @Override
+    public void setVoltage(double volts) {
+        <%= name.charAt(0).toLowerCase() + name.slice(1) %>Sim.setInputVoltage(volts);
+        isRunning = false;
+    }
+
+    /**
+     * Stop the motor
+     */
+    @Override
+    public void stopMotor() {
+        isRunning = false;
+        setVoltage(0);
+    }
+
+    /**
+     * Zero the encoder values
+     */
+    @Override
+    public void zeroEncoder() {
+        <%= name.charAt(0).toLowerCase() + name.slice(1) %>Sim.setState(0, 0);
+    }
+
+    /**
+     * return encoder position value
+     *
+     * @return encoder position value
+     */
+    @Override
+    public Angle getPosition() {
+        return Radians.of(<%= name.charAt(0).toLowerCase() + name.slice(1) %>Sim.getAngleRads());
+    }
+
+    /**
+     * set motor position to assigned setpoint using pid constants from assigned slot
+     *
+     * @param setpoint setpoint value
+     * @param slot pid constants slot
+     */
+    @Override
+    public void setSetpoint(Angle setpoint, int slot) {
+        pidController.setSetpoint(setpoint.in(Radians));
+        isRunning = true;
+    }
+
+    @Override
+    public void updateInputs(<%= name.charAt(0).toUpperCase() + name.slice(1) %>Inputs inputs){
+        double volts = 0.0;
+        double current = 0.0;
+
+        if (isRunning) {
+            volts = MathUtil.clamp(
+                    pidController.calculate(<%= name.charAt(0).toLowerCase() + name.slice(1) %>Sim.getAngleRads()) * 12,
+                    -12,
+                    12
+            );
+        }
+
+        volts += feedforward.calculate(<%= name.charAt(0).toLowerCase() + name.slice(1) %>Sim.getAngleRads(), 0);
+
+        <%= name.charAt(0).toLowerCase() + name.slice(1) %>Sim.setInputVoltage(volts);
+        current = <%= name.charAt(0).toLowerCase() + name.slice(1) %>Sim.getCurrentDrawAmps();
+        <%= name.charAt(0).toLowerCase() + name.slice(1) %>Sim.update(0.02);
+        
+        inputs.is<%= name.charAt(0).toUpperCase() + name.slice(1) %>Connected = true;
+        inputs.<%= name.charAt(0).toLowerCase() + name.slice(1) %>Voltage = Volts.of(volts);
+        inputs.<%= name.charAt(0).toLowerCase() + name.slice(1) %>Position = Radians.of(<%= name.charAt(0).toLowerCase() + name.slice(1) %>Sim.getAngleRads());
+        inputs.<%= name.charAt(0).toLowerCase() + name.slice(1) %>SupplyCurrent = Amps.of(current);
+        inputs.<%= name.charAt(0).toLowerCase() + name.slice(1) %>TargetAngle = Radians.of(pidController.getSetpoint());
+    }
+}
