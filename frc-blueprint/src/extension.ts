@@ -127,13 +127,18 @@ export function activate(context: vscode.ExtensionContext) {
 
         const subsystemName = await vscode.window.showInputBox({ prompt: "Enter subsystem name" });
 
+        if (!subsystemName) return;
+
         const followerMotorCount = await vscode.window.showQuickPick(['0', '1', '2', '3'], { placeHolder: 'How many follower motors in this subsystem?' });
+
+        if (!followerMotorCount) return;
 
         const motorsSelection = await vscode.window.showQuickPick(Object.keys(motorMap), { title: "Select type of motors" });
 
         if (!motorsSelection) return;
 
         const motorsType = motorMap[motorsSelection as keyof typeof motorMap];
+
 
         const folderUri = await vscode.window.showOpenDialog({
             canSelectFiles: false,
