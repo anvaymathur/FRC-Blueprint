@@ -129,7 +129,24 @@ export function activate(context: vscode.ExtensionContext) {
 
         if (!subsystemName) return;
 
-        const followerMotorCount = await vscode.window.showQuickPick(['0', '1', '2', '3'], { placeHolder: 'How many follower motors in this subsystem?' });
+        // const followerMotorCount = await vscode.window.showQuickPick(['0', '1', '2', '3'], { placeHolder: 'How many follower motors in this subsystem?' });
+        const followerMotorCount = await vscode.window.showInputBox({ prompt: "How many follower motors in this subsystem?", 
+            validateInput: (text) => {
+                if (text.length == 0){
+                    return "Count cannot be empty";
+                }
+
+                if (!/^\d+$/.test(text)){
+                    return "Please enter a valid positive number (e.g., 0, 1, 2).";
+                }
+
+                if (parseInt(text,10) > 10){
+                    return "Please enter a valid number between 0 and 10"
+                }
+
+                return null;
+            }
+        });
 
         if (!followerMotorCount) return;
 
