@@ -2,7 +2,7 @@
   "name": "frc-blueprint",
   "displayName": "FRC Blueprint",
   "description": "FRC Blueprint is an interactive VS Code extension for generating basic WPILib subsystems with an IO structure",
-  "version": "26.1.0",
+  "version": "26.1.1",
   "publisher": "anvay-mathur",
   "repository": {
     "type": "git",
