@@ -151,7 +151,7 @@ export function activate(context: vscode.ExtensionContext) {
         };
 
         // Ensure the folder is named with a lowercase first letter (camelCase)
-        const folderName = name.charAt(0).toLowerCase() + name.slice(1);
+        const folderName = name.toLowerCase();
         const folderUri = vscode.Uri.joinPath(selectedFolder, folderName);
 
         await vscode.workspace.fs.createDirectory(folderUri);
