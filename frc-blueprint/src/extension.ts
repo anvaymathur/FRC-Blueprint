@@ -284,20 +284,36 @@ export function activate(context: vscode.ExtensionContext) {
         }
 
         // Final Execution
-        const folderUri = await vscode.window.showOpenDialog({
-            canSelectFiles: false,
-            canSelectFolders: true,
-            canSelectMany: false,
-            openLabel: 'Select subsystem folder'
-        });
+        const config = vscode.workspace.getConfiguration('frc-blueprint');
+        let savedPath = config.get<string>('subsystemsPath');
+        let targetFolderUri: vscode.Uri;
 
-        if (!folderUri || folderUri.length === 0) return;
+        if (savedPath) {
+            // 1. If we found a saved path, convert the string back into a Uri
+            targetFolderUri = vscode.Uri.file(savedPath);
+        } else {
+            const folderUri = await vscode.window.showOpenDialog({
+                canSelectFiles: false,
+                canSelectFolders: true,
+                canSelectMany: false,
+                openLabel: 'Select subsystem folder'
+            });
 
+            if (!folderUri || folderUri.length === 0) return;
+
+            targetFolderUri = folderUri[0];
+
+            await config.update('subsystemsPath', targetFolderUri.fsPath, vscode.ConfigurationTarget.Workspace);
+
+            vscode.window.showInformationMessage("Subsystems folder saved for future use!");
+
+        }
+        
         const finalSubsystemType = subsystemMap[state.type as keyof typeof subsystemMap];
         const finalMotorType = motorMap[state.motors as keyof typeof motorMap];
 
         if (state.name && state.followers) {
-            generateFiles(state.name, finalSubsystemType, state.followers, finalMotorType, folderUri[0]);
+            generateFiles(state.name, finalSubsystemType, state.followers, finalMotorType, targetFolderUri);
         }
     });
 
