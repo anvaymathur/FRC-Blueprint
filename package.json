@@ -2,7 +2,13 @@
   "name": "frc-blueprint",
   "displayName": "FRC Blueprint",
   "description": "FRC Blueprint is an interactive VS Code extension for generating WPILib robot code, commands, subsystems, and mechanism boilerplate for FRC teams.Instead of static snippets, FRC Blueprint guides you through setup with prompts and configuration options — allowing you to generate code tailored to your robot architecture. Configure things like motor count, follower motors, sensors, command structure, and more directly inside VS Code.Features include:Interactive subsystem and command generationSmart WPILib boilerplate creationConfigurable templates based on robot hardwareAutomatic file and folder generationExtensible template system for custom team workflowsFaster setup for common FRC mechanisms and patternsDesigned for command-based robot projects using WPILib and Java.",
-  "version": "0.0.1",
+  "version": "26.1.0",
+  "publisher": "anvay-mathur",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/anvaymathur/FRC-Blueprint"
+  },
+  "icon": "images/first-logo-padded-680x454.png",
   "engines": {
     "vscode": "^1.102.0"
   },
