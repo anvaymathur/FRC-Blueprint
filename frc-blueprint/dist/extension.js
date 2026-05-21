@@ -725,6 +725,74 @@ __export(extension_exports, {
 module.exports = __toCommonJS(extension_exports);
 var vscode = __toESM(require("vscode"));
 var ejs = require_ejs();
+var BACK_BUTTON = /* @__PURE__ */ Symbol("BACK");
+async function runQuickPickStep(step, totalSteps, title, items) {
+  return new Promise((resolve) => {
+    const qp = vscode.window.createQuickPick();
+    qp.title = title;
+    qp.step = step;
+    qp.totalSteps = totalSteps;
+    qp.items = items;
+    qp.ignoreFocusOut = true;
+    if (step > 1) {
+      qp.buttons = [vscode.QuickInputButtons.Back];
+    }
+    qp.onDidTriggerButton((btn) => {
+      if (btn === vscode.QuickInputButtons.Back) {
+        qp.hide();
+        resolve(BACK_BUTTON);
+      }
+    });
+    qp.onDidAccept(() => {
+      const selected = qp.activeItems[0];
+      qp.hide();
+      resolve(selected);
+    });
+    qp.onDidHide(() => {
+      qp.dispose();
+      resolve(void 0);
+    });
+    qp.show();
+  });
+}
+async function runInputBoxStep(step, totalSteps, title, prompt, validate, value = "") {
+  return new Promise((resolve) => {
+    const input = vscode.window.createInputBox();
+    input.title = title;
+    input.step = step;
+    input.totalSteps = totalSteps;
+    input.prompt = prompt;
+    input.value = value;
+    input.ignoreFocusOut = true;
+    if (step > 1) {
+      input.buttons = [vscode.QuickInputButtons.Back];
+    }
+    input.onDidTriggerButton((btn) => {
+      if (btn === vscode.QuickInputButtons.Back) {
+        input.hide();
+        resolve(BACK_BUTTON);
+      }
+    });
+    input.onDidChangeValue((text) => {
+      if (validate) {
+        const error = validate(text);
+        input.validationMessage = error ? error : void 0;
+      }
+    });
+    input.onDidAccept(() => {
+      if (!input.validationMessage) {
+        const text = input.value;
+        input.hide();
+        resolve(text);
+      }
+    });
+    input.onDidHide(() => {
+      input.dispose();
+      resolve(void 0);
+    });
+    input.show();
+  });
+}
 function activate(context) {
   console.log('Congratulations, your extension "frc-blueprint" is now active!');
   let SubsystemType;
@@ -761,7 +829,7 @@ function activate(context) {
         break;
       case 2 /* PIVOTING_SUBSYSTEM */:
         templateFolder = "pivotingSubsystem";
-        templatePrefix = "pivotingSubsystem";
+        templatePrefix = "PivotingSubsystem";
         break;
       default:
         vscode.window.showErrorMessage("Unknown subsystem type selected.");
@@ -801,30 +869,82 @@ function activate(context) {
     vscode.window.showInformationMessage(`${className} subsystem created!`);
   }
   const disposable = vscode.commands.registerCommand("frc-blueprint.createSubsystem", async () => {
-    const selection = await vscode.window.showQuickPick(Object.keys(subsystemMap), { title: "Select type of subsystem" });
-    if (!selection) return;
-    const subsystemType = subsystemMap[selection];
-    const subsystemName = await vscode.window.showInputBox({ prompt: "Enter subsystem name" });
-    if (!subsystemName) return;
-    const followerMotorCount = await vscode.window.showInputBox({
-      prompt: "How many follower motors in this subsystem?",
-      validateInput: (text) => {
-        if (text.length == 0) {
-          return "Count cannot be empty";
+    const state = {};
+    let currentStep = 1;
+    const totalSteps = 4;
+    while (currentStep > 0 && currentStep <= totalSteps) {
+      switch (currentStep) {
+        case 1: {
+          const items = Object.keys(subsystemMap).map((label) => ({ label }));
+          const result = await runQuickPickStep(currentStep, totalSteps, "Select Subsystem Type", items);
+          if (result === void 0) return;
+          if (result === BACK_BUTTON) {
+            currentStep--;
+            continue;
+          }
+          state.type = result.label;
+          currentStep++;
+          break;
         }
-        if (!/^\d+$/.test(text)) {
-          return "Please enter a valid positive number (e.g., 0, 1, 2).";
+        case 2: {
+          const result = await runInputBoxStep(
+            currentStep,
+            totalSteps,
+            "Subsystem Name",
+            "Enter the name of your subsystem (e.g. Elevator)",
+            (text) => {
+              if (text.length === 0) return "Name cannot be empty.";
+              if (!/^[a-zA-Z0-9_]+$/.test(text)) return "Name can only contain letters, numbers, and underscores.";
+              return null;
+            },
+            state.name
+          );
+          if (result === void 0) return;
+          if (result === BACK_BUTTON) {
+            currentStep--;
+            continue;
+          }
+          state.name = result;
+          currentStep++;
+          break;
         }
-        if (parseInt(text, 10) > 10) {
-          return "Please enter a valid number between 0 and 10";
+        case 3: {
+          const result = await runInputBoxStep(
+            currentStep,
+            totalSteps,
+            "Follower Motors",
+            "How many follower motors in this subsystem?",
+            (text) => {
+              if (text.length == 0) return "Count cannot be empty";
+              if (!/^\d+$/.test(text)) return "Please enter a valid positive number (e.g., 0, 1, 2).";
+              if (parseInt(text, 10) > 10) return "Please enter a valid number between 0 and 10";
+              return null;
+            },
+            state.followers
+          );
+          if (result === void 0) return;
+          if (result === BACK_BUTTON) {
+            currentStep--;
+            continue;
+          }
+          state.followers = result;
+          currentStep++;
+          break;
         }
-        return null;
+        case 4: {
+          const items = Object.keys(motorMap).map((label) => ({ label }));
+          const result = await runQuickPickStep(currentStep, totalSteps, "Select Motor Controller", items);
+          if (result === void 0) return;
+          if (result === BACK_BUTTON) {
+            currentStep--;
+            continue;
+          }
+          state.motors = result.label;
+          currentStep++;
+          break;
+        }
       }
-    });
-    if (!followerMotorCount) return;
-    const motorsSelection = await vscode.window.showQuickPick(Object.keys(motorMap), { title: "Select type of motors" });
-    if (!motorsSelection) return;
-    const motorsType = motorMap[motorsSelection];
+    }
     const folderUri = await vscode.window.showOpenDialog({
       canSelectFiles: false,
       canSelectFolders: true,
@@ -832,9 +952,10 @@ function activate(context) {
       openLabel: "Select subsystem folder"
     });
     if (!folderUri || folderUri.length === 0) return;
-    const selectedFolder = folderUri[0];
-    if (subsystemName && followerMotorCount) {
-      generateFiles(subsystemName, subsystemType, followerMotorCount, motorsType, selectedFolder);
+    const finalSubsystemType = subsystemMap[state.type];
+    const finalMotorType = motorMap[state.motors];
+    if (state.name && state.followers) {
+      generateFiles(state.name, finalSubsystemType, state.followers, finalMotorType, folderUri[0]);
     }
   });
   context.subscriptions.push(disposable);
