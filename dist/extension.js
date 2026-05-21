@@ -1,4 +1,65 @@
-"use strict";var ae=Object.create;var M=Object.defineProperty;var se=Object.getOwnPropertyDescriptor;var ie=Object.getOwnPropertyNames;var oe=Object.getPrototypeOf,ce=Object.prototype.hasOwnProperty;var U=(t,n)=>()=>(n||t((n={exports:{}}).exports,n),n.exports),ue=(t,n)=>{for(var e in n)M(t,e,{get:n[e],enumerable:!0})},B=(t,n,e,r)=>{if(n&&typeof n=="object"||typeof n=="function")for(let a of ie(n))!ce.call(t,a)&&a!==e&&M(t,a,{get:()=>n[a],enumerable:!(r=se(n,a))||r.enumerable});return t};var le=(t,n,e)=>(e=t!=null?ae(oe(t)):{},B(n||!t||!t.__esModule?M(e,"default",{value:t,enumerable:!0}):e,t)),fe=t=>B(M({},"__esModule",{value:!0}),t);var X=U((C,$)=>{"use strict";Object.defineProperty(C,"__esModule",{value:!0});var w={},de=/[|\\{}()[\]^$+*?.]/g,pe=Object.prototype.hasOwnProperty,N=function(t,n){return pe.apply(t,[n])};w.hasOwn=N;w.escapeRegExpChars=function(t){return t?String(t).replace(de,"\\$&"):""};var me={"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&#34;","'":"&#39;"},he=/[&<>'"]/g;function ve(t){return me[t]||t}var _e=`var _ENCODE_HTML_RULES = {
+"use strict";
+var __create = Object.create;
+var __defProp = Object.defineProperty;
+var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
+var __getOwnPropNames = Object.getOwnPropertyNames;
+var __getProtoOf = Object.getPrototypeOf;
+var __hasOwnProp = Object.prototype.hasOwnProperty;
+var __commonJS = (cb, mod) => function __require() {
+  return mod || (0, cb[__getOwnPropNames(cb)[0]])((mod = { exports: {} }).exports, mod), mod.exports;
+};
+var __export = (target, all) => {
+  for (var name in all)
+    __defProp(target, name, { get: all[name], enumerable: true });
+};
+var __copyProps = (to, from, except, desc) => {
+  if (from && typeof from === "object" || typeof from === "function") {
+    for (let key of __getOwnPropNames(from))
+      if (!__hasOwnProp.call(to, key) && key !== except)
+        __defProp(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable });
+  }
+  return to;
+};
+var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__getProtoOf(mod)) : {}, __copyProps(
+  // If the importer is in node compatibility mode or this is not an ESM
+  // file that has been converted to a CommonJS file using a Babel-
+  // compatible transform (i.e. "__esModule" has not been set), then set
+  // "default" to the CommonJS "module.exports" for node compatibility.
+  isNodeMode || !mod || !mod.__esModule ? __defProp(target, "default", { value: mod, enumerable: true }) : target,
+  mod
+));
+var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
+
+// node_modules/ejs/lib/cjs/utils.js
+var require_utils = __commonJS({
+  "node_modules/ejs/lib/cjs/utils.js"(exports2, module2) {
+    "use strict";
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    var utils = {};
+    var regExpChars = /[|\\{}()[\]^$+*?.]/g;
+    var hasOwnProperty = Object.prototype.hasOwnProperty;
+    var hasOwn = function(obj, key) {
+      return hasOwnProperty.apply(obj, [key]);
+    };
+    utils.hasOwn = hasOwn;
+    utils.escapeRegExpChars = function(string) {
+      if (!string) {
+        return "";
+      }
+      return String(string).replace(regExpChars, "\\$&");
+    };
+    var _ENCODE_HTML_RULES = {
+      "&": "&amp;",
+      "<": "&lt;",
+      ">": "&gt;",
+      '"': "&#34;",
+      "'": "&#39;"
+    };
+    var _MATCH_HTML = /[&<>'"]/g;
+    function encode_char(c) {
+      return _ENCODE_HTML_RULES[c] || c;
+    }
+    var escapeFuncStr = `var _ENCODE_HTML_RULES = {
       "&": "&amp;"
     , "<": "&lt;"
     , ">": "&gt;"
@@ -9,47 +70,913 @@
 function encode_char(c) {
   return _ENCODE_HTML_RULES[c] || c;
 };
-`;w.escapeXML=function(t){return t==null?"":String(t).replace(he,ve)};function W(){return Function.prototype.toString.call(this)+`;
-`+_e}try{typeof Object.defineProperty=="function"?Object.defineProperty(w.escapeXML,"toString",{value:W}):w.escapeXML.toString=W}catch{console.warn("Unable to set escapeXML.toString (is the Function prototype frozen?)")}w.shallowCopy=function(t,n){if(n=n||{},t!=null)for(var e in n)N(n,e)&&(e==="__proto__"||e==="constructor"||(t[e]=n[e]));return t};w.shallowCopyFromList=function(t,n,e){if(e=e||[],n=n||{},t!=null)for(var r=0;r<e.length;r++){var a=e[r];if(typeof n[a]<"u"){if(!N(n,a)||a==="__proto__"||a==="constructor")continue;t[a]=n[a]}}return t};w.cache={_data:{},set:function(t,n){this._data[t]=n},get:function(t){return this._data[t]},remove:function(t){delete this._data[t]},reset:function(){this._data={}}};w.hyphenToCamel=function(t){return t.replace(/-[a-z]/g,function(n){return n[1].toUpperCase()})};w.createNullProtoObjWherePossible=(function(){return typeof Object.create=="function"?function(){return Object.create(null)}:{__proto__:null}instanceof Object?function(){return{}}:function(){return{__proto__:null}}})();w.hasOwnOnlyObject=function(t){var n=w.createNullProtoObjWherePossible();for(var e in t)N(t,e)&&(n[e]=t[e]);return n};typeof C<"u"&&($.exports=w);C.default=w});var V=U((A,D)=>{"use strict";var j=A&&A.__importDefault||function(t){return t&&t.__esModule?t:{default:t}};Object.defineProperty(A,"__esModule",{value:!0});var k=j(require("fs")),L=j(require("path")),f=j(X());var x="var",c={},ge="<",we=">",ye="%",G="locals",Se="(<%%|%%>|<%=|<%-|<%_|<%#|<%|%>|-%>|_%>)",Q=["delimiter","scope","context","debug","compileDebug","_with","rmWhitespace","strict","filename","async"],be=Q.concat("cache"),H=/^\uFEFF/,F=/^[a-zA-Z_$][0-9a-zA-Z_$]*$/;c.cache=f.default.cache;c.fileLoader=k.default.readFileSync;c.localsName=G;c.promiseImpl=new Function("return this;")().Promise;c.resolveInclude=function(t,n,e){var r=L.default.dirname,a=L.default.extname,i=L.default.resolve,d=i(e?n:r(n),t),s=a(t);return s||(d+=".ejs"),d};function J(t,n){var e;if(n.some(function(r){return e=c.resolveInclude(t,r,!0),k.default.existsSync(e)}))return e}function Ee(t,n){var e,r,a=n.views,i=/^[A-Za-z]+:\\|^\//.exec(t);if(i&&i.length)t=t.replace(/^\/*/,""),Array.isArray(n.root)?e=J(t,n.root):e=c.resolveInclude(t,n.root||"/",!0);else if(n.filename&&(r=c.resolveInclude(t,n.filename),k.default.existsSync(r)&&(e=r)),!e&&Array.isArray(a)&&(e=J(t,a)),!e&&typeof n.includer!="function")throw new Error('Could not find the include file "'+n.escapeFunction(t)+'"');return e}function P(t,n){var e,r=t.filename,a=arguments.length>1;if(t.cache){if(!r)throw new Error("cache option requires a filename");if(e=c.cache.get(r),e)return e;a||(n=K(r).toString().replace(H,""))}else if(!a){if(!r)throw new Error("Internal EJS error: no file name or template provided");n=K(r).toString().replace(H,"")}return e=c.compile(n,t),t.cache&&c.cache.set(r,e),e}function Te(t,n,e){var r;if(e){try{r=P(t)(n)}catch(a){return e(a)}e(null,r)}else{if(typeof c.promiseImpl=="function")return new c.promiseImpl(function(a,i){try{r=P(t)(n),a(r)}catch(d){i(d)}});throw new Error("Please provide a callback function")}}function K(t){return c.fileLoader(t)}function Oe(t,n){var e=f.default.shallowCopy(f.default.createNullProtoObjWherePossible(),n);if(e.filename=Ee(t,e),typeof n.includer=="function"){var r=n.includer(t,e.filename);if(r&&(r.filename&&(e.filename=r.filename),r.template))return P(e,r.template)}return P(e)}function Le(t,n,e,r,a){var i=n.split(`
-`),d=Math.max(r-3,0),s=Math.min(i.length,r+3),o=a(e),u=i.slice(d,s).map(function(p,S){var m=S+d+1;return(m==r?" >> ":"    ")+m+"| "+p}).join(`
-`);throw t.path=o,t.message=(o||"ejs")+":"+r+`
-`+u+`
+`;
+    utils.escapeXML = function(markup) {
+      return markup == void 0 ? "" : String(markup).replace(_MATCH_HTML, encode_char);
+    };
+    function escapeXMLToString() {
+      return Function.prototype.toString.call(this) + ";\n" + escapeFuncStr;
+    }
+    try {
+      if (typeof Object.defineProperty === "function") {
+        Object.defineProperty(utils.escapeXML, "toString", { value: escapeXMLToString });
+      } else {
+        utils.escapeXML.toString = escapeXMLToString;
+      }
+    } catch (err) {
+      console.warn("Unable to set escapeXML.toString (is the Function prototype frozen?)");
+    }
+    utils.shallowCopy = function(to, from) {
+      from = from || {};
+      if (to !== null && to !== void 0) {
+        for (var p in from) {
+          if (!hasOwn(from, p)) {
+            continue;
+          }
+          if (p === "__proto__" || p === "constructor") {
+            continue;
+          }
+          to[p] = from[p];
+        }
+      }
+      return to;
+    };
+    utils.shallowCopyFromList = function(to, from, list) {
+      list = list || [];
+      from = from || {};
+      if (to !== null && to !== void 0) {
+        for (var i = 0; i < list.length; i++) {
+          var p = list[i];
+          if (typeof from[p] != "undefined") {
+            if (!hasOwn(from, p)) {
+              continue;
+            }
+            if (p === "__proto__" || p === "constructor") {
+              continue;
+            }
+            to[p] = from[p];
+          }
+        }
+      }
+      return to;
+    };
+    utils.cache = {
+      _data: {},
+      set: function(key, val) {
+        this._data[key] = val;
+      },
+      get: function(key) {
+        return this._data[key];
+      },
+      remove: function(key) {
+        delete this._data[key];
+      },
+      reset: function() {
+        this._data = {};
+      }
+    };
+    utils.hyphenToCamel = function(str) {
+      return str.replace(/-[a-z]/g, function(match) {
+        return match[1].toUpperCase();
+      });
+    };
+    utils.createNullProtoObjWherePossible = (function() {
+      if (typeof Object.create == "function") {
+        return function() {
+          return /* @__PURE__ */ Object.create(null);
+        };
+      }
+      if (!({ __proto__: null } instanceof Object)) {
+        return function() {
+          return { __proto__: null };
+        };
+      }
+      return function() {
+        return {};
+      };
+    })();
+    utils.hasOwnOnlyObject = function(obj) {
+      var o = utils.createNullProtoObjWherePossible();
+      for (var p in obj) {
+        if (hasOwn(obj, p)) {
+          o[p] = obj[p];
+        }
+      }
+      return o;
+    };
+    if (typeof exports2 != "undefined") {
+      module2.exports = utils;
+    }
+    exports2.default = utils;
+  }
+});
 
-`+t.message,t}function Y(t){return t.replace(/;(\s*$)/,"$1")}c.compile=function(n,e){var r;return e&&e.scope&&(console.warn("`scope` option is deprecated and will be removed in future EJS"),e.context||(e.context=e.scope),delete e.scope),r=new v(n,e),r.compile()};c.render=function(t,n,e){var r=n||f.default.createNullProtoObjWherePossible(),a=e||f.default.createNullProtoObjWherePossible();return arguments.length==2&&f.default.shallowCopyFromList(a,r,Q),P(a,t)(r)};c.renderFile=function(){var t=Array.prototype.slice.call(arguments),n=t.shift(),e,r={filename:n},a,i;return typeof arguments[arguments.length-1]=="function"&&(e=t.pop()),t.length?(a=t.shift(),t.length?f.default.shallowCopy(r,t.pop()):(f.default.hasOwn(a,"settings")&&a.settings&&(a.settings.views&&(r.views=a.settings.views),a.settings["view cache"]&&(r.cache=!0),i=a.settings["view options"],i&&f.default.shallowCopy(r,i)),f.default.shallowCopyFromList(r,a,be)),r.filename=n):a=f.default.createNullProtoObjWherePossible(),Te(r,a,e)};c.Template=v;c.clearCache=function(){c.cache.reset()};function v(t,n){var e=f.default.hasOwnOnlyObject(n),r=f.default.createNullProtoObjWherePossible();this.templateText=t,this.mode=null,this.truncate=!1,this.currentLine=1,this.source="",r.escapeFunction=e.escape||e.escapeFunction||f.default.escapeXML,r.compileDebug=e.compileDebug!==!1,r.debug=!!e.debug,r.filename=e.filename,r.openDelimiter=e.openDelimiter||c.openDelimiter||ge,r.closeDelimiter=e.closeDelimiter||c.closeDelimiter||we,r.delimiter=e.delimiter||c.delimiter||ye,r.strict=e.strict||!1,r.context=e.context,r.cache=e.cache||!1,r.rmWhitespace=e.rmWhitespace,r.root=e.root,r.includer=e.includer,r.outputFunctionName=e.outputFunctionName,r.localsName=e.localsName||c.localsName||G,r.views=e.views,r.async=e.async,r.destructuredLocals=e.destructuredLocals,r.legacyInclude=typeof e.legacyInclude<"u"?!!e.legacyInclude:!0,r.strict?r._with=!1:r._with=typeof e._with<"u"?e._with:!0,this.opts=r,this.regex=this.createRegex()}v.modes={EVAL:"eval",ESCAPED:"escaped",RAW:"raw",COMMENT:"comment",LITERAL:"literal"};v.prototype={createRegex:function(){var t=Se,n=f.default.escapeRegExpChars(this.opts.delimiter),e=f.default.escapeRegExpChars(this.opts.openDelimiter),r=f.default.escapeRegExpChars(this.opts.closeDelimiter);return t=t.replace(/%/g,n).replace(/</g,e).replace(/>/g,r),new RegExp(t)},compile:function(){var t,n,e=this.opts,r="",a="",i=e.escapeFunction,d,s=e.filename?JSON.stringify(e.filename):"undefined";if(!this.source){if(this.generateSource(),r+="  ".concat(x,` __output = "";
-`)+`  function __append(s) { if (s !== undefined && s !== null) __output += s }
-`,e.outputFunctionName){if(!F.test(e.outputFunctionName))throw new Error("outputFunctionName is not a valid JS identifier.");r+="  ".concat(x," ")+e.outputFunctionName+` = __append;
-`}if(e.localsName&&!F.test(e.localsName))throw new Error("localsName is not a valid JS identifier.");if(e.destructuredLocals&&e.destructuredLocals.length){for(var o="  ".concat(x," __locals = (")+e.localsName+` || {}),
-`,u=0;u<e.destructuredLocals.length;u++){var p=e.destructuredLocals[u];if(!F.test(p))throw new Error("destructuredLocals["+u+"] is not a valid JS identifier.");u>0&&(o+=`,
-  `),o+=p+" = __locals."+p}r+=o+`;
-`}e._with!==!1&&(r+="  with ("+e.localsName+` || {}) {
-`,a+=`  }
-`),a+=`  return __output;
-`,this.source=r+this.source+a}e.compileDebug?t="".concat(x," __line = 1")+`
-  , __lines = `+JSON.stringify(this.templateText)+`
-  , __filename = `+s+`;
-try {
-`+this.source+`} catch (e) {
-  rethrow(e, __lines, __filename, __line, escapeFn);
+// node_modules/ejs/lib/cjs/ejs.js
+var require_ejs = __commonJS({
+  "node_modules/ejs/lib/cjs/ejs.js"(exports2, module2) {
+    "use strict";
+    var __importDefault = exports2 && exports2.__importDefault || function(mod) {
+      return mod && mod.__esModule ? mod : { "default": mod };
+    };
+    Object.defineProperty(exports2, "__esModule", { value: true });
+    var fs_1 = __importDefault(require("fs"));
+    var path_1 = __importDefault(require("path"));
+    var utils_js_1 = __importDefault(require_utils());
+    var DECLARATION_KEYWORD = "var";
+    var ejs2 = {};
+    var _DEFAULT_OPEN_DELIMITER = "<";
+    var _DEFAULT_CLOSE_DELIMITER = ">";
+    var _DEFAULT_DELIMITER = "%";
+    var _DEFAULT_LOCALS_NAME = "locals";
+    var _REGEX_STRING = "(<%%|%%>|<%=|<%-|<%_|<%#|<%|%>|-%>|_%>)";
+    var _OPTS_PASSABLE_WITH_DATA = [
+      "delimiter",
+      "scope",
+      "context",
+      "debug",
+      "compileDebug",
+      "_with",
+      "rmWhitespace",
+      "strict",
+      "filename",
+      "async"
+    ];
+    var _OPTS_PASSABLE_WITH_DATA_EXPRESS = _OPTS_PASSABLE_WITH_DATA.concat("cache");
+    var _BOM = /^\uFEFF/;
+    var _JS_IDENTIFIER = /^[a-zA-Z_$][0-9a-zA-Z_$]*$/;
+    ejs2.cache = utils_js_1.default.cache;
+    ejs2.fileLoader = fs_1.default.readFileSync;
+    ejs2.localsName = _DEFAULT_LOCALS_NAME;
+    ejs2.promiseImpl = new Function("return this;")().Promise;
+    ejs2.resolveInclude = function(name, filename, isDir) {
+      var dirname = path_1.default.dirname;
+      var extname = path_1.default.extname;
+      var resolve = path_1.default.resolve;
+      var includePath = resolve(isDir ? filename : dirname(filename), name);
+      var ext = extname(name);
+      if (!ext) {
+        includePath += ".ejs";
+      }
+      return includePath;
+    };
+    function resolvePaths(name, paths) {
+      var filePath;
+      if (paths.some(function(v) {
+        filePath = ejs2.resolveInclude(name, v, true);
+        return fs_1.default.existsSync(filePath);
+      })) {
+        return filePath;
+      }
+    }
+    function getIncludePath(path, options) {
+      var includePath;
+      var filePath;
+      var views = options.views;
+      var match = /^[A-Za-z]+:\\|^\//.exec(path);
+      if (match && match.length) {
+        path = path.replace(/^\/*/, "");
+        if (Array.isArray(options.root)) {
+          includePath = resolvePaths(path, options.root);
+        } else {
+          includePath = ejs2.resolveInclude(path, options.root || "/", true);
+        }
+      } else {
+        if (options.filename) {
+          filePath = ejs2.resolveInclude(path, options.filename);
+          if (fs_1.default.existsSync(filePath)) {
+            includePath = filePath;
+          }
+        }
+        if (!includePath && Array.isArray(views)) {
+          includePath = resolvePaths(path, views);
+        }
+        if (!includePath && typeof options.includer !== "function") {
+          throw new Error('Could not find the include file "' + options.escapeFunction(path) + '"');
+        }
+      }
+      return includePath;
+    }
+    function handleCache(options, template) {
+      var func;
+      var filename = options.filename;
+      var hasTemplate = arguments.length > 1;
+      if (options.cache) {
+        if (!filename) {
+          throw new Error("cache option requires a filename");
+        }
+        func = ejs2.cache.get(filename);
+        if (func) {
+          return func;
+        }
+        if (!hasTemplate) {
+          template = fileLoader(filename).toString().replace(_BOM, "");
+        }
+      } else if (!hasTemplate) {
+        if (!filename) {
+          throw new Error("Internal EJS error: no file name or template provided");
+        }
+        template = fileLoader(filename).toString().replace(_BOM, "");
+      }
+      func = ejs2.compile(template, options);
+      if (options.cache) {
+        ejs2.cache.set(filename, func);
+      }
+      return func;
+    }
+    function tryHandleCache(options, data, cb) {
+      var result;
+      if (!cb) {
+        if (typeof ejs2.promiseImpl == "function") {
+          return new ejs2.promiseImpl(function(resolve, reject) {
+            try {
+              result = handleCache(options)(data);
+              resolve(result);
+            } catch (err) {
+              reject(err);
+            }
+          });
+        } else {
+          throw new Error("Please provide a callback function");
+        }
+      } else {
+        try {
+          result = handleCache(options)(data);
+        } catch (err) {
+          return cb(err);
+        }
+        cb(null, result);
+      }
+    }
+    function fileLoader(filePath) {
+      return ejs2.fileLoader(filePath);
+    }
+    function includeFile(path, options) {
+      var opts = utils_js_1.default.shallowCopy(utils_js_1.default.createNullProtoObjWherePossible(), options);
+      opts.filename = getIncludePath(path, opts);
+      if (typeof options.includer === "function") {
+        var includerResult = options.includer(path, opts.filename);
+        if (includerResult) {
+          if (includerResult.filename) {
+            opts.filename = includerResult.filename;
+          }
+          if (includerResult.template) {
+            return handleCache(opts, includerResult.template);
+          }
+        }
+      }
+      return handleCache(opts);
+    }
+    function rethrow(err, str, flnm, lineno, esc) {
+      var lines = str.split("\n");
+      var start = Math.max(lineno - 3, 0);
+      var end = Math.min(lines.length, lineno + 3);
+      var filename = esc(flnm);
+      var context = lines.slice(start, end).map(function(line, i) {
+        var curr = i + start + 1;
+        return (curr == lineno ? " >> " : "    ") + curr + "| " + line;
+      }).join("\n");
+      err.path = filename;
+      err.message = (filename || "ejs") + ":" + lineno + "\n" + context + "\n\n" + err.message;
+      throw err;
+    }
+    function stripSemi(str) {
+      return str.replace(/;(\s*$)/, "$1");
+    }
+    ejs2.compile = function compile(template, opts) {
+      var templ;
+      if (opts && opts.scope) {
+        console.warn("`scope` option is deprecated and will be removed in future EJS");
+        if (!opts.context) {
+          opts.context = opts.scope;
+        }
+        delete opts.scope;
+      }
+      templ = new Template(template, opts);
+      return templ.compile();
+    };
+    ejs2.render = function(template, d, o) {
+      var data = d || utils_js_1.default.createNullProtoObjWherePossible();
+      var opts = o || utils_js_1.default.createNullProtoObjWherePossible();
+      if (arguments.length == 2) {
+        utils_js_1.default.shallowCopyFromList(opts, data, _OPTS_PASSABLE_WITH_DATA);
+      }
+      return handleCache(opts, template)(data);
+    };
+    ejs2.renderFile = function() {
+      var args = Array.prototype.slice.call(arguments);
+      var filename = args.shift();
+      var cb;
+      var opts = { filename };
+      var data;
+      var viewOpts;
+      if (typeof arguments[arguments.length - 1] == "function") {
+        cb = args.pop();
+      }
+      if (args.length) {
+        data = args.shift();
+        if (args.length) {
+          utils_js_1.default.shallowCopy(opts, args.pop());
+        } else {
+          if (utils_js_1.default.hasOwn(data, "settings") && data.settings) {
+            if (data.settings.views) {
+              opts.views = data.settings.views;
+            }
+            if (data.settings["view cache"]) {
+              opts.cache = true;
+            }
+            viewOpts = data.settings["view options"];
+            if (viewOpts) {
+              utils_js_1.default.shallowCopy(opts, viewOpts);
+            }
+          }
+          utils_js_1.default.shallowCopyFromList(opts, data, _OPTS_PASSABLE_WITH_DATA_EXPRESS);
+        }
+        opts.filename = filename;
+      } else {
+        data = utils_js_1.default.createNullProtoObjWherePossible();
+      }
+      return tryHandleCache(opts, data, cb);
+    };
+    ejs2.Template = Template;
+    ejs2.clearCache = function() {
+      ejs2.cache.reset();
+    };
+    function Template(text, optsParam) {
+      var opts = utils_js_1.default.hasOwnOnlyObject(optsParam);
+      var options = utils_js_1.default.createNullProtoObjWherePossible();
+      this.templateText = text;
+      this.mode = null;
+      this.truncate = false;
+      this.currentLine = 1;
+      this.source = "";
+      options.escapeFunction = opts.escape || opts.escapeFunction || utils_js_1.default.escapeXML;
+      options.compileDebug = opts.compileDebug !== false;
+      options.debug = !!opts.debug;
+      options.filename = opts.filename;
+      options.openDelimiter = opts.openDelimiter || ejs2.openDelimiter || _DEFAULT_OPEN_DELIMITER;
+      options.closeDelimiter = opts.closeDelimiter || ejs2.closeDelimiter || _DEFAULT_CLOSE_DELIMITER;
+      options.delimiter = opts.delimiter || ejs2.delimiter || _DEFAULT_DELIMITER;
+      options.strict = opts.strict || false;
+      options.context = opts.context;
+      options.cache = opts.cache || false;
+      options.rmWhitespace = opts.rmWhitespace;
+      options.root = opts.root;
+      options.includer = opts.includer;
+      options.outputFunctionName = opts.outputFunctionName;
+      options.localsName = opts.localsName || ejs2.localsName || _DEFAULT_LOCALS_NAME;
+      options.views = opts.views;
+      options.async = opts.async;
+      options.destructuredLocals = opts.destructuredLocals;
+      options.legacyInclude = typeof opts.legacyInclude != "undefined" ? !!opts.legacyInclude : true;
+      if (options.strict) {
+        options._with = false;
+      } else {
+        options._with = typeof opts._with != "undefined" ? opts._with : true;
+      }
+      this.opts = options;
+      this.regex = this.createRegex();
+    }
+    Template.modes = {
+      EVAL: "eval",
+      ESCAPED: "escaped",
+      RAW: "raw",
+      COMMENT: "comment",
+      LITERAL: "literal"
+    };
+    Template.prototype = {
+      createRegex: function() {
+        var str = _REGEX_STRING;
+        var delim = utils_js_1.default.escapeRegExpChars(this.opts.delimiter);
+        var open = utils_js_1.default.escapeRegExpChars(this.opts.openDelimiter);
+        var close = utils_js_1.default.escapeRegExpChars(this.opts.closeDelimiter);
+        str = str.replace(/%/g, delim).replace(/</g, open).replace(/>/g, close);
+        return new RegExp(str);
+      },
+      compile: function() {
+        var src;
+        var fn;
+        var opts = this.opts;
+        var prepended = "";
+        var appended = "";
+        var escapeFn = opts.escapeFunction;
+        var ctor;
+        var sanitizedFilename = opts.filename ? JSON.stringify(opts.filename) : "undefined";
+        if (!this.source) {
+          this.generateSource();
+          prepended += "  ".concat(DECLARATION_KEYWORD, ' __output = "";\n') + "  function __append(s) { if (s !== undefined && s !== null) __output += s }\n";
+          if (opts.outputFunctionName) {
+            if (!_JS_IDENTIFIER.test(opts.outputFunctionName)) {
+              throw new Error("outputFunctionName is not a valid JS identifier.");
+            }
+            prepended += "  ".concat(DECLARATION_KEYWORD, " ") + opts.outputFunctionName + " = __append;\n";
+          }
+          if (opts.localsName && !_JS_IDENTIFIER.test(opts.localsName)) {
+            throw new Error("localsName is not a valid JS identifier.");
+          }
+          if (opts.destructuredLocals && opts.destructuredLocals.length) {
+            var destructuring = "  ".concat(DECLARATION_KEYWORD, " __locals = (") + opts.localsName + " || {}),\n";
+            for (var i = 0; i < opts.destructuredLocals.length; i++) {
+              var name_1 = opts.destructuredLocals[i];
+              if (!_JS_IDENTIFIER.test(name_1)) {
+                throw new Error("destructuredLocals[" + i + "] is not a valid JS identifier.");
+              }
+              if (i > 0) {
+                destructuring += ",\n  ";
+              }
+              destructuring += name_1 + " = __locals." + name_1;
+            }
+            prepended += destructuring + ";\n";
+          }
+          if (opts._with !== false) {
+            prepended += "  with (" + opts.localsName + " || {}) {\n";
+            appended += "  }\n";
+          }
+          appended += "  return __output;\n";
+          this.source = prepended + this.source + appended;
+        }
+        if (opts.compileDebug) {
+          src = "".concat(DECLARATION_KEYWORD, " __line = 1") + "\n  , __lines = " + JSON.stringify(this.templateText) + "\n  , __filename = " + sanitizedFilename + ";\ntry {\n" + this.source + "} catch (e) {\n  rethrow(e, __lines, __filename, __line, escapeFn);\n}\n";
+        } else {
+          src = this.source;
+        }
+        if (opts.strict) {
+          src = '"use strict";\n' + src;
+        }
+        if (opts.debug) {
+          console.log(src);
+        }
+        if (opts.compileDebug && opts.filename) {
+          src = src + "\n//# sourceURL=" + sanitizedFilename + "\n";
+        }
+        try {
+          if (opts.async) {
+            try {
+              ctor = new Function("return (async function(){}).constructor;")();
+            } catch (e) {
+              if (e instanceof SyntaxError) {
+                throw new Error("This environment does not support async/await");
+              } else {
+                throw e;
+              }
+            }
+          } else {
+            ctor = Function;
+          }
+          fn = new ctor(opts.localsName + ", escapeFn, include, rethrow", src);
+        } catch (e) {
+          if (e instanceof SyntaxError) {
+            if (opts.filename) {
+              e.message += " in " + opts.filename;
+            }
+            e.message += " while compiling ejs\n\n";
+            e.message += "If the above error is not helpful, you may want to try EJS-Lint:\n";
+            e.message += "https://github.com/RyanZim/EJS-Lint";
+            if (!opts.async) {
+              e.message += "\n";
+              e.message += "Or, if you meant to create an async function, pass `async: true` as an option.";
+            }
+          }
+          throw e;
+        }
+        var returnedFn = function anonymous(data) {
+          var include = function(path, includeData) {
+            var d = utils_js_1.default.shallowCopy(utils_js_1.default.createNullProtoObjWherePossible(), data);
+            if (includeData) {
+              d = utils_js_1.default.shallowCopy(d, includeData);
+            }
+            return includeFile(path, opts)(d);
+          };
+          return fn.apply(opts.context, [data || utils_js_1.default.createNullProtoObjWherePossible(), escapeFn, include, rethrow]);
+        };
+        if (opts.filename && typeof Object.defineProperty === "function") {
+          var filename = opts.filename;
+          var basename = path_1.default.basename(filename, path_1.default.extname(filename));
+          try {
+            Object.defineProperty(returnedFn, "name", {
+              value: basename,
+              writable: false,
+              enumerable: false,
+              configurable: true
+            });
+          } catch (e) {
+          }
+        }
+        return returnedFn;
+      },
+      generateSource: function() {
+        var opts = this.opts;
+        if (opts.rmWhitespace) {
+          this.templateText = this.templateText.replace(/[\r\n]+/g, "\n").replace(/^\s+|\s+$/gm, "");
+        }
+        var self = this;
+        var d = this.opts.delimiter;
+        var o = this.opts.openDelimiter;
+        var c = this.opts.closeDelimiter;
+        var openWhitespaceSlurpTag = utils_js_1.default.escapeRegExpChars(o + d + "_");
+        var closeWhitespaceSlurpTag = utils_js_1.default.escapeRegExpChars("_" + d + c);
+        var openWhitespaceSlurpReplacement = o + d + "_";
+        var closeWhitespaceSlurpReplacement = "_" + d + c;
+        this.templateText = this.templateText.replace(new RegExp("[ \\t]*" + openWhitespaceSlurpTag, "gm"), openWhitespaceSlurpReplacement).replace(new RegExp(closeWhitespaceSlurpTag + "[ \\t]*", "gm"), closeWhitespaceSlurpReplacement);
+        var matches = this.parseTemplateText();
+        if (matches && matches.length) {
+          matches.forEach(function(line, index) {
+            var closing;
+            if (line.indexOf(o + d) === 0 && line.indexOf(o + d + d) !== 0) {
+              closing = matches[index + 2];
+              if (!(closing == d + c || closing == "-" + d + c || closing == "_" + d + c)) {
+                throw new Error('Could not find matching close tag for "' + line + '".');
+              }
+            }
+            self.scanLine(line);
+          });
+        }
+      },
+      parseTemplateText: function() {
+        var str = this.templateText;
+        var pat = this.regex;
+        var result = pat.exec(str);
+        var arr = [];
+        var firstPos;
+        while (result) {
+          firstPos = result.index;
+          if (firstPos !== 0) {
+            arr.push(str.substring(0, firstPos));
+            str = str.slice(firstPos);
+          }
+          arr.push(result[0]);
+          str = str.slice(result[0].length);
+          result = pat.exec(str);
+        }
+        if (str) {
+          arr.push(str);
+        }
+        return arr;
+      },
+      _addOutput: function(line) {
+        if (this.truncate) {
+          line = line.replace(/^(?:\r\n|\r|\n)/, "");
+          this.truncate = false;
+        }
+        if (!line) {
+          return line;
+        }
+        line = line.replace(/\\/g, "\\\\");
+        line = line.replace(/\n/g, "\\n");
+        line = line.replace(/\r/g, "\\r");
+        line = line.replace(/"/g, '\\"');
+        this.source += '    ; __append("' + line + '")\n';
+      },
+      scanLine: function(line) {
+        var self = this;
+        var d = this.opts.delimiter;
+        var o = this.opts.openDelimiter;
+        var c = this.opts.closeDelimiter;
+        var newLineCount = 0;
+        newLineCount = line.split("\n").length - 1;
+        switch (line) {
+          case o + d:
+          case o + d + "_":
+            this.mode = Template.modes.EVAL;
+            break;
+          case o + d + "=":
+            this.mode = Template.modes.ESCAPED;
+            break;
+          case o + d + "-":
+            this.mode = Template.modes.RAW;
+            break;
+          case o + d + "#":
+            this.mode = Template.modes.COMMENT;
+            break;
+          case o + d + d:
+            this.mode = Template.modes.LITERAL;
+            this.source += '    ; __append("' + line.replace(o + d + d, o + d) + '")\n';
+            break;
+          case d + d + c:
+            this.mode = Template.modes.LITERAL;
+            this.source += '    ; __append("' + line.replace(d + d + c, d + c) + '")\n';
+            break;
+          case d + c:
+          case "-" + d + c:
+          case "_" + d + c:
+            if (this.mode == Template.modes.LITERAL) {
+              this._addOutput(line);
+            }
+            this.mode = null;
+            this.truncate = line.indexOf("-") === 0 || line.indexOf("_") === 0;
+            break;
+          default:
+            if (this.mode) {
+              switch (this.mode) {
+                case Template.modes.EVAL:
+                case Template.modes.ESCAPED:
+                case Template.modes.RAW:
+                  if (line.lastIndexOf("//") > line.lastIndexOf("\n")) {
+                    line += "\n";
+                  }
+              }
+              switch (this.mode) {
+                // Just executing code
+                case Template.modes.EVAL:
+                  this.source += "    ; " + line + "\n";
+                  break;
+                // Exec, esc, and output
+                case Template.modes.ESCAPED:
+                  this.source += "    ; __append(escapeFn(" + stripSemi(line) + "))\n";
+                  break;
+                // Exec and output
+                case Template.modes.RAW:
+                  this.source += "    ; __append(" + stripSemi(line) + ")\n";
+                  break;
+                case Template.modes.COMMENT:
+                  break;
+                // Literal <%% mode, append as raw output
+                case Template.modes.LITERAL:
+                  this._addOutput(line);
+                  break;
+              }
+            } else {
+              this._addOutput(line);
+            }
+        }
+        if (self.opts.compileDebug && newLineCount) {
+          this.currentLine += newLineCount;
+          this.source += "    ; __line = " + this.currentLine + "\n";
+        }
+      }
+    };
+    ejs2.escapeXML = utils_js_1.default.escapeXML;
+    ejs2.__express = ejs2.renderFile;
+    if (typeof window != "undefined") {
+      window.ejs = ejs2;
+    }
+    if (typeof module2 != "undefined") {
+      module2.exports = ejs2;
+    }
+    exports2.default = ejs2;
+  }
+});
+
+// src/extension.ts
+var extension_exports = {};
+__export(extension_exports, {
+  activate: () => activate,
+  deactivate: () => deactivate
+});
+module.exports = __toCommonJS(extension_exports);
+var vscode = __toESM(require("vscode"));
+var ejs = require_ejs();
+var BACK_BUTTON = /* @__PURE__ */ Symbol("BACK");
+async function runQuickPickStep(step, totalSteps, title, items) {
+  return new Promise((resolve) => {
+    const qp = vscode.window.createQuickPick();
+    qp.title = title;
+    qp.step = step;
+    qp.totalSteps = totalSteps;
+    qp.items = items;
+    qp.ignoreFocusOut = true;
+    if (step > 1) {
+      qp.buttons = [vscode.QuickInputButtons.Back];
+    }
+    qp.onDidTriggerButton((btn) => {
+      if (btn === vscode.QuickInputButtons.Back) {
+        qp.hide();
+        resolve(BACK_BUTTON);
+      }
+    });
+    qp.onDidAccept(() => {
+      const selected = qp.activeItems[0];
+      qp.hide();
+      resolve(selected);
+    });
+    qp.onDidHide(() => {
+      qp.dispose();
+      resolve(void 0);
+    });
+    qp.show();
+  });
 }
-`:t=this.source,e.strict&&(t=`"use strict";
-`+t),e.debug&&console.log(t),e.compileDebug&&e.filename&&(t=t+`
-//# sourceURL=`+s+`
-`);try{if(e.async)try{d=new Function("return (async function(){}).constructor;")()}catch(g){throw g instanceof SyntaxError?new Error("This environment does not support async/await"):g}else d=Function;n=new d(e.localsName+", escapeFn, include, rethrow",t)}catch(g){throw g instanceof SyntaxError&&(e.filename&&(g.message+=" in "+e.filename),g.message+=` while compiling ejs
-
-`,g.message+=`If the above error is not helpful, you may want to try EJS-Lint:
-`,g.message+="https://github.com/RyanZim/EJS-Lint",e.async||(g.message+=`
-`,g.message+="Or, if you meant to create an async function, pass `async: true` as an option.")),g}var S=function(h){var _=function(E,T){var b=f.default.shallowCopy(f.default.createNullProtoObjWherePossible(),h);return T&&(b=f.default.shallowCopy(b,T)),Oe(E,e)(b)};return n.apply(e.context,[h||f.default.createNullProtoObjWherePossible(),i,_,Le])};if(e.filename&&typeof Object.defineProperty=="function"){var m=e.filename,y=L.default.basename(m,L.default.extname(m));try{Object.defineProperty(S,"name",{value:y,writable:!1,enumerable:!1,configurable:!0})}catch{}}return S},generateSource:function(){var t=this.opts;t.rmWhitespace&&(this.templateText=this.templateText.replace(/[\r\n]+/g,`
-`).replace(/^\s+|\s+$/gm,""));var n=this,e=this.opts.delimiter,r=this.opts.openDelimiter,a=this.opts.closeDelimiter,i=f.default.escapeRegExpChars(r+e+"_"),d=f.default.escapeRegExpChars("_"+e+a),s=r+e+"_",o="_"+e+a;this.templateText=this.templateText.replace(new RegExp("[ \\t]*"+i,"gm"),s).replace(new RegExp(d+"[ \\t]*","gm"),o);var u=this.parseTemplateText();u&&u.length&&u.forEach(function(p,S){var m;if(p.indexOf(r+e)===0&&p.indexOf(r+e+e)!==0&&(m=u[S+2],!(m==e+a||m=="-"+e+a||m=="_"+e+a)))throw new Error('Could not find matching close tag for "'+p+'".');n.scanLine(p)})},parseTemplateText:function(){for(var t=this.templateText,n=this.regex,e=n.exec(t),r=[],a;e;)a=e.index,a!==0&&(r.push(t.substring(0,a)),t=t.slice(a)),r.push(e[0]),t=t.slice(e[0].length),e=n.exec(t);return t&&r.push(t),r},_addOutput:function(t){if(this.truncate&&(t=t.replace(/^(?:\r\n|\r|\n)/,""),this.truncate=!1),!t)return t;t=t.replace(/\\/g,"\\\\"),t=t.replace(/\n/g,"\\n"),t=t.replace(/\r/g,"\\r"),t=t.replace(/"/g,'\\"'),this.source+='    ; __append("'+t+`")
-`},scanLine:function(t){var n=this,e=this.opts.delimiter,r=this.opts.openDelimiter,a=this.opts.closeDelimiter,i=0;switch(i=t.split(`
-`).length-1,t){case r+e:case r+e+"_":this.mode=v.modes.EVAL;break;case r+e+"=":this.mode=v.modes.ESCAPED;break;case r+e+"-":this.mode=v.modes.RAW;break;case r+e+"#":this.mode=v.modes.COMMENT;break;case r+e+e:this.mode=v.modes.LITERAL,this.source+='    ; __append("'+t.replace(r+e+e,r+e)+`")
-`;break;case e+e+a:this.mode=v.modes.LITERAL,this.source+='    ; __append("'+t.replace(e+e+a,e+a)+`")
-`;break;case e+a:case"-"+e+a:case"_"+e+a:this.mode==v.modes.LITERAL&&this._addOutput(t),this.mode=null,this.truncate=t.indexOf("-")===0||t.indexOf("_")===0;break;default:if(this.mode){switch(this.mode){case v.modes.EVAL:case v.modes.ESCAPED:case v.modes.RAW:t.lastIndexOf("//")>t.lastIndexOf(`
-`)&&(t+=`
-`)}switch(this.mode){case v.modes.EVAL:this.source+="    ; "+t+`
-`;break;case v.modes.ESCAPED:this.source+="    ; __append(escapeFn("+Y(t)+`))
-`;break;case v.modes.RAW:this.source+="    ; __append("+Y(t)+`)
-`;break;case v.modes.COMMENT:break;case v.modes.LITERAL:this._addOutput(t);break}}else this._addOutput(t)}n.opts.compileDebug&&i&&(this.currentLine+=i,this.source+="    ; __line = "+this.currentLine+`
-`)}};c.escapeXML=f.default.escapeXML;c.__express=c.renderFile;typeof window<"u"&&(window.ejs=c);typeof D<"u"&&(D.exports=c);A.default=c});var Me={};ue(Me,{activate:()=>Ae,deactivate:()=>Ie});module.exports=fe(Me);var l=le(require("vscode")),Pe=V(),O=Symbol("BACK");async function z(t,n,e,r){return new Promise(a=>{let i=l.window.createQuickPick();i.title=e,i.step=t,i.totalSteps=n,i.items=r,i.ignoreFocusOut=!0,t>1&&(i.buttons=[l.QuickInputButtons.Back]),i.onDidTriggerButton(d=>{d===l.QuickInputButtons.Back&&(i.hide(),a(O))}),i.onDidAccept(()=>{let d=i.activeItems[0];i.hide(),a(d)}),i.onDidHide(()=>{i.dispose(),a(void 0)}),i.show()})}async function q(t,n,e,r,a,i=""){return new Promise(d=>{let s=l.window.createInputBox();s.title=e,s.step=t,s.totalSteps=n,s.prompt=r,s.value=i,s.ignoreFocusOut=!0,t>1&&(s.buttons=[l.QuickInputButtons.Back]),s.onDidTriggerButton(o=>{o===l.QuickInputButtons.Back&&(s.hide(),d(O))}),s.onDidChangeValue(o=>{if(a){let u=a(o);s.validationMessage=u||void 0}}),s.onDidAccept(()=>{if(!s.validationMessage){let o=s.value;s.hide(),d(o)}}),s.onDidHide(()=>{s.dispose(),d(void 0)}),s.show()})}function Ae(t){console.log('Congratulations, your extension "frc-blueprint" is now active!');let n;(p=>(p[p.LINEAR_SUBSYSTEM=0]="LINEAR_SUBSYSTEM",p[p.SPINNING_SUBSYSTEM=1]="SPINNING_SUBSYSTEM",p[p.PIVOTING_SUBSYSTEM=2]="PIVOTING_SUBSYSTEM"))(n||={});let e;(u=>(u[u.TALON_FX=0]="TALON_FX",u[u.SPARK_MAX=1]="SPARK_MAX"))(e||={});let r={"Linear Mechanism":0,"Pivoting Mechanism":2,"Continuous Rotation Mechanism":1},a={TalonFX:0,"SPARK MAX":1};async function i(s,o,u,p,S){let m="",y="";switch(o){case 0:m="linearSubsystem",y="LinearSubsystem";break;case 1:m="continuousRotationSubsystem",y="ContinuousRotationSubsystem";break;case 2:m="pivotingSubsystem",y="PivotingSubsystem";break;default:l.window.showErrorMessage("Unknown subsystem type selected.");return}let g=parseInt(u,10)||0,h={name:s,numFollowers:g},_=s.toLowerCase(),E=l.Uri.joinPath(S,_);await l.workspace.fs.createDirectory(E);let T=async(Z,R)=>{let ee=l.Uri.joinPath(t.extensionUri,"src","templates",m,Z);try{let I=await l.workspace.fs.readFile(ee),te=Buffer.from(I).toString("utf8"),re=Pe.render(te,h),ne=l.Uri.joinPath(E,R);await l.workspace.fs.writeFile(ne,Buffer.from(re,"utf8"))}catch(I){l.window.showErrorMessage(`Failed to generate ${R}: ${I}`),console.error(I)}},b=s.charAt(0).toUpperCase()+s.slice(1);await T(`${y}.java.ejs`,`${b}.java`),await T(`${y}IO.java.ejs`,`${b}IO.java`),await T(`${y}IOSim.java.ejs`,`${b}IOSim.java`),await T(`${y}Constants.java.ejs`,`${b}Constants.java`),p===0?await T(`${y}IOTalonFX.java.ejs`,`${b}IOTalonFX.java`):p===1&&l.window.showWarningMessage("SPARK MAX templates are not implemented yet!"),l.window.showInformationMessage(`${b} subsystem created!`)}let d=l.commands.registerCommand("frc-blueprint.createSubsystem",async()=>{let s={},o=1,u=4;for(;o>0&&o<=u;)switch(o){case 1:{let h=Object.keys(r).map(E=>({label:E})),_=await z(o,u,"Select Subsystem Type",h);if(_===void 0)return;if(_===O){o--;continue}s.type=_.label,o++;break}case 2:{let h=await q(o,u,"Subsystem Name","Enter the name of your subsystem (e.g. Elevator)",_=>_.length===0?"Name cannot be empty.":/^[a-zA-Z0-9_]+$/.test(_)?null:"Name can only contain letters, numbers, and underscores.",s.name);if(h===void 0)return;if(h===O){o--;continue}s.name=h,o++;break}case 3:{let h=await q(o,u,"Follower Motors","How many follower motors in this subsystem?",_=>_.length==0?"Count cannot be empty":/^\d+$/.test(_)?parseInt(_,10)>10?"Please enter a valid number between 0 and 10":null:"Please enter a valid positive number (e.g., 0, 1, 2).",s.followers);if(h===void 0)return;if(h===O){o--;continue}s.followers=h,o++;break}case 4:{let h=Object.keys(a).map(E=>({label:E})),_=await z(o,u,"Select Motor Controller",h);if(_===void 0)return;if(_===O){o--;continue}s.motors=_.label,o++;break}}let p=l.workspace.getConfiguration("frc-blueprint"),S=p.get("subsystemsPath"),m;if(S)m=l.Uri.file(S);else{let h=await l.window.showOpenDialog({canSelectFiles:!1,canSelectFolders:!0,canSelectMany:!1,openLabel:"Select subsystem folder"});if(!h||h.length===0)return;m=h[0],await p.update("subsystemsPath",m.fsPath,l.ConfigurationTarget.Workspace),l.window.showInformationMessage("Subsystems folder saved for future use!")}let y=r[s.type],g=a[s.motors];s.name&&s.followers&&i(s.name,y,s.followers,g,m)});t.subscriptions.push(d)}function Ie(){}0&&(module.exports={activate,deactivate});
+async function runInputBoxStep(step, totalSteps, title, prompt, validate, value = "") {
+  return new Promise((resolve) => {
+    const input = vscode.window.createInputBox();
+    input.title = title;
+    input.step = step;
+    input.totalSteps = totalSteps;
+    input.prompt = prompt;
+    input.value = value;
+    input.ignoreFocusOut = true;
+    if (step > 1) {
+      input.buttons = [vscode.QuickInputButtons.Back];
+    }
+    input.onDidTriggerButton((btn) => {
+      if (btn === vscode.QuickInputButtons.Back) {
+        input.hide();
+        resolve(BACK_BUTTON);
+      }
+    });
+    input.onDidChangeValue((text) => {
+      if (validate) {
+        const error = validate(text);
+        input.validationMessage = error ? error : void 0;
+      }
+    });
+    input.onDidAccept(() => {
+      if (!input.validationMessage) {
+        const text = input.value;
+        input.hide();
+        resolve(text);
+      }
+    });
+    input.onDidHide(() => {
+      input.dispose();
+      resolve(void 0);
+    });
+    input.show();
+  });
+}
+function activate(context) {
+  console.log('Congratulations, your extension "frc-blueprint" is now active!');
+  let SubsystemType;
+  ((SubsystemType2) => {
+    SubsystemType2[SubsystemType2["LINEAR_SUBSYSTEM"] = 0] = "LINEAR_SUBSYSTEM";
+    SubsystemType2[SubsystemType2["SPINNING_SUBSYSTEM"] = 1] = "SPINNING_SUBSYSTEM";
+    SubsystemType2[SubsystemType2["PIVOTING_SUBSYSTEM"] = 2] = "PIVOTING_SUBSYSTEM";
+  })(SubsystemType || (SubsystemType = {}));
+  let MotorTypes;
+  ((MotorTypes2) => {
+    MotorTypes2[MotorTypes2["TALON_FX"] = 0] = "TALON_FX";
+    MotorTypes2[MotorTypes2["SPARK_MAX"] = 1] = "SPARK_MAX";
+  })(MotorTypes || (MotorTypes = {}));
+  const subsystemMap = {
+    "Linear Mechanism": 0 /* LINEAR_SUBSYSTEM */,
+    "Pivoting Mechanism": 2 /* PIVOTING_SUBSYSTEM */,
+    "Continuous Rotation Mechanism": 1 /* SPINNING_SUBSYSTEM */
+  };
+  const motorMap = {
+    "TalonFX": 0 /* TALON_FX */,
+    "SPARK MAX": 1 /* SPARK_MAX */
+  };
+  async function generateFiles(name, subsystemType, followerMotors, motorsType, selectedFolder) {
+    let templateFolder = "";
+    let templatePrefix = "";
+    switch (subsystemType) {
+      case 0 /* LINEAR_SUBSYSTEM */:
+        templateFolder = "linearSubsystem";
+        templatePrefix = "LinearSubsystem";
+        break;
+      case 1 /* SPINNING_SUBSYSTEM */:
+        templateFolder = "continuousRotationSubsystem";
+        templatePrefix = "ContinuousRotationSubsystem";
+        break;
+      case 2 /* PIVOTING_SUBSYSTEM */:
+        templateFolder = "pivotingSubsystem";
+        templatePrefix = "PivotingSubsystem";
+        break;
+      default:
+        vscode.window.showErrorMessage("Unknown subsystem type selected.");
+        return;
+    }
+    const numFollowers = parseInt(followerMotors, 10) || 0;
+    const templateData = {
+      name,
+      numFollowers
+    };
+    const folderName = name.toLowerCase();
+    const folderUri = vscode.Uri.joinPath(selectedFolder, folderName);
+    await vscode.workspace.fs.createDirectory(folderUri);
+    const renderAndWrite = async (templateFileName, outputFileName) => {
+      const templatePath = vscode.Uri.joinPath(context.extensionUri, "src", "templates", templateFolder, templateFileName);
+      try {
+        const templateBuffer = await vscode.workspace.fs.readFile(templatePath);
+        const templateString = Buffer.from(templateBuffer).toString("utf8");
+        const renderedContent = ejs.render(templateString, templateData);
+        const outputUri = vscode.Uri.joinPath(folderUri, outputFileName);
+        await vscode.workspace.fs.writeFile(outputUri, Buffer.from(renderedContent, "utf8"));
+      } catch (error) {
+        vscode.window.showErrorMessage(`Failed to generate ${outputFileName}: ${error}`);
+        console.error(error);
+      }
+    };
+    const className = name.charAt(0).toUpperCase() + name.slice(1);
+    await renderAndWrite(`${templatePrefix}.java.ejs`, `${className}.java`);
+    await renderAndWrite(`${templatePrefix}IO.java.ejs`, `${className}IO.java`);
+    await renderAndWrite(`${templatePrefix}IOSim.java.ejs`, `${className}IOSim.java`);
+    await renderAndWrite(`${templatePrefix}Constants.java.ejs`, `${className}Constants.java`);
+    if (motorsType === 0 /* TALON_FX */) {
+      await renderAndWrite(`${templatePrefix}IOTalonFX.java.ejs`, `${className}IOTalonFX.java`);
+    } else if (motorsType === 1 /* SPARK_MAX */) {
+      vscode.window.showWarningMessage("SPARK MAX templates are not implemented yet!");
+    }
+    vscode.window.showInformationMessage(`${className} subsystem created!`);
+  }
+  const disposable = vscode.commands.registerCommand("frc-blueprint.createSubsystem", async () => {
+    const state = {};
+    let currentStep = 1;
+    const totalSteps = 4;
+    while (currentStep > 0 && currentStep <= totalSteps) {
+      switch (currentStep) {
+        case 1: {
+          const items = Object.keys(subsystemMap).map((label) => ({ label }));
+          const result = await runQuickPickStep(currentStep, totalSteps, "Select Subsystem Type", items);
+          if (result === void 0) return;
+          if (result === BACK_BUTTON) {
+            currentStep--;
+            continue;
+          }
+          state.type = result.label;
+          currentStep++;
+          break;
+        }
+        case 2: {
+          const result = await runInputBoxStep(
+            currentStep,
+            totalSteps,
+            "Subsystem Name",
+            "Enter the name of your subsystem (e.g. Elevator)",
+            (text) => {
+              if (text.length === 0) return "Name cannot be empty.";
+              if (!/^[a-zA-Z0-9_]+$/.test(text)) return "Name can only contain letters, numbers, and underscores.";
+              return null;
+            },
+            state.name
+          );
+          if (result === void 0) return;
+          if (result === BACK_BUTTON) {
+            currentStep--;
+            continue;
+          }
+          state.name = result;
+          currentStep++;
+          break;
+        }
+        case 3: {
+          const result = await runInputBoxStep(
+            currentStep,
+            totalSteps,
+            "Follower Motors",
+            "How many follower motors in this subsystem?",
+            (text) => {
+              if (text.length == 0) return "Count cannot be empty";
+              if (!/^\d+$/.test(text)) return "Please enter a valid positive number (e.g., 0, 1, 2).";
+              if (parseInt(text, 10) > 10) return "Please enter a valid number between 0 and 10";
+              return null;
+            },
+            state.followers
+          );
+          if (result === void 0) return;
+          if (result === BACK_BUTTON) {
+            currentStep--;
+            continue;
+          }
+          state.followers = result;
+          currentStep++;
+          break;
+        }
+        case 4: {
+          const items = Object.keys(motorMap).map((label) => ({ label }));
+          const result = await runQuickPickStep(currentStep, totalSteps, "Select Motor Controller", items);
+          if (result === void 0) return;
+          if (result === BACK_BUTTON) {
+            currentStep--;
+            continue;
+          }
+          state.motors = result.label;
+          currentStep++;
+          break;
+        }
+      }
+    }
+    const config = vscode.workspace.getConfiguration("frc-blueprint");
+    let savedPath = config.get("subsystemsPath");
+    let targetFolderUri;
+    if (savedPath) {
+      targetFolderUri = vscode.Uri.file(savedPath);
+    } else {
+      const folderUri = await vscode.window.showOpenDialog({
+        canSelectFiles: false,
+        canSelectFolders: true,
+        canSelectMany: false,
+        openLabel: "Select subsystem folder"
+      });
+      if (!folderUri || folderUri.length === 0) return;
+      targetFolderUri = folderUri[0];
+      await config.update("subsystemsPath", targetFolderUri.fsPath, vscode.ConfigurationTarget.Workspace);
+      vscode.window.showInformationMessage("Subsystems folder saved for future use!");
+    }
+    const finalSubsystemType = subsystemMap[state.type];
+    const finalMotorType = motorMap[state.motors];
+    if (state.name && state.followers) {
+      generateFiles(state.name, finalSubsystemType, state.followers, finalMotorType, targetFolderUri);
+    }
+  });
+  context.subscriptions.push(disposable);
+}
+function deactivate() {
+}
+// Annotate the CommonJS export names for ESM import in node:
+0 && (module.exports = {
+  activate,
+  deactivate
+});
 /*! Bundled license information:
 
 ejs/lib/cjs/ejs.js:
@@ -60,3 +987,4 @@ ejs/lib/cjs/ejs.js:
    * @license {@link http://www.apache.org/licenses/LICENSE-2.0 Apache License, Version 2.0}
    *)
 */
+//# sourceMappingURL=extension.js.map
