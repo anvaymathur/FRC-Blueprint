@@ -3,6 +3,90 @@
 import * as vscode from 'vscode';
 import ejs = require('ejs');
 
+// A special token so we know when the user clicked the Back button
+const BACK_BUTTON = Symbol('BACK');
+
+// --- WIZARD HELPER FUNCTIONS ---
+async function runQuickPickStep(step: number, totalSteps: number, title: string, items: vscode.QuickPickItem[]) {
+    return new Promise<vscode.QuickPickItem | typeof BACK_BUTTON | undefined>((resolve) => {
+        const qp = vscode.window.createQuickPick();
+        qp.title = title;
+        qp.step = step;
+        qp.totalSteps = totalSteps;
+        qp.items = items;
+        qp.ignoreFocusOut = true; 
+
+        if (step > 1) {
+            qp.buttons = [vscode.QuickInputButtons.Back];
+        }
+
+        qp.onDidTriggerButton(btn => {
+            if (btn === vscode.QuickInputButtons.Back) {
+                qp.hide();
+                resolve(BACK_BUTTON);
+            }
+        });
+
+        qp.onDidAccept(() => {
+            const selected = qp.activeItems[0];
+            qp.hide();
+            resolve(selected);
+        });
+
+        qp.onDidHide(() => {
+            qp.dispose();
+            resolve(undefined);
+        });
+
+        qp.show();
+    });
+}
+
+async function runInputBoxStep(step: number, totalSteps: number, title: string, prompt: string, validate?: (text: string) => string | null, value: string = '') {
+    return new Promise<string | typeof BACK_BUTTON | undefined>((resolve) => {
+        const input = vscode.window.createInputBox();
+        input.title = title;
+        input.step = step;
+        input.totalSteps = totalSteps;
+        input.prompt = prompt;
+        input.value = value;
+        input.ignoreFocusOut = true;
+
+        if (step > 1) {
+            input.buttons = [vscode.QuickInputButtons.Back];
+        }
+
+        input.onDidTriggerButton(btn => {
+            if (btn === vscode.QuickInputButtons.Back) {
+                input.hide();
+                resolve(BACK_BUTTON);
+            }
+        });
+
+        input.onDidChangeValue(text => {
+            if (validate) {
+                const error = validate(text);
+                input.validationMessage = error ? error : undefined;
+            }
+        });
+
+        input.onDidAccept(() => {
+            if (!input.validationMessage) {
+                const text = input.value;
+                input.hide();
+                resolve(text);
+            }
+        });
+
+        input.onDidHide(() => {
+            input.dispose();
+            resolve(undefined);
+        });
+
+        input.show();
+    });
+}
+
 // This method is called when your extension is activated
 // Your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
@@ -45,13 +129,13 @@ export function activate(context: vscode.ExtensionContext) {
                 templateFolder = "linearSubsystem";
                 templatePrefix = "LinearSubsystem";
                 break;
-            case SubsystemType.SPINNING_SUBSYSTEM: // Mapped to 'Continuous Rotation Mechanism'
+            case SubsystemType.SPINNING_SUBSYSTEM: 
                 templateFolder = "continuousRotationSubsystem";
                 templatePrefix = "ContinuousRotationSubsystem";
                 break;
-            case SubsystemType.PIVOTING_SUBSYSTEM: // Mapped to 'Pivoting Mechanism'
+            case SubsystemType.PIVOTING_SUBSYSTEM: 
                 templateFolder = "pivotingSubsystem";
-                templatePrefix = "pivotingSubsystem";
+                templatePrefix = "PivotingSubsystem";
                 break;
             default:
                 vscode.window.showErrorMessage("Unknown subsystem type selected.");
@@ -116,40 +200,121 @@ export function activate(context: vscode.ExtensionContext) {
     // Now provide the implementation of the command with registerCommand
     // The commandId parameter must match the command field in package.json
     const disposable = vscode.commands.registerCommand('frc-blueprint.createSubsystem', async () => {
-        // The code you place here will be executed every time your command is executed
-        // Display a message box to the user
-        // vscode.window.showInformationMessage('Hello World from FRC Blueprint!');
-        const selection = await vscode.window.showQuickPick(Object.keys(subsystemMap), { title: "Select type of subsystem" });
+        
+        // State object to hold answers
+        const state: {
+            type?: string,
+            name?: string,
+            followers?: string,
+            motors?: string
+        } = {};
 
-        if (!selection) return;
+        let currentStep = 1;
+        const totalSteps = 4;
 
-        const subsystemType = subsystemMap[selection as keyof typeof subsystemMap];
+        // The Wizard State Machine Loop
+        while (currentStep > 0 && currentStep <= totalSteps) {
 
-        const subsystemName = await vscode.window.showInputBox({ prompt: "Enter subsystem name" });
+            switch (currentStep){
+                case 1: {
+                    const items = Object.keys(subsystemMap).map(label => ({ label }));
+                    const result = await runQuickPickStep(currentStep, totalSteps, "Select Subsystem Type", items);
+                    
+                    if (result === undefined) return; 
+                    if (result === BACK_BUTTON) { currentStep--; continue; } 
+                    
+                    state.type = result.label;
+                    currentStep++;
+                    break;
+                }    
+                case 2: {
+                    const result = await runInputBoxStep(
+                        currentStep, totalSteps, 
+                        "Subsystem Name", "Enter the name of your subsystem (e.g. Elevator)", 
+                        (text) => {
+                            if (text.length === 0) return "Name cannot be empty.";
+                            if (!/^[a-zA-Z0-9_]+$/.test(text)) return "Name can only contain letters, numbers, and underscores.";
+                            return null;
+                        },
+                        state.name 
+                    );
 
-        const followerMotorCount = await vscode.window.showQuickPick(['0', '1', '2', '3'], { placeHolder: 'How many follower motors in this subsystem?' });
+                    if (result === undefined) return; 
+                    if (result === BACK_BUTTON) { currentStep--; continue; } 
+                    
+                    state.name = result;
+                    currentStep++;
+                    break;
+                }
 
-        const motorsSelection = await vscode.window.showQuickPick(Object.keys(motorMap), { title: "Select type of motors" });
+                case 3: {
+                    const result = await runInputBoxStep(
+                        currentStep, totalSteps, 
+                        "Follower Motors", "How many follower motors in this subsystem?", 
+                        (text) => {
+                            if (text.length == 0) return "Count cannot be empty";
+                            if (!/^\d+$/.test(text)) return "Please enter a valid positive number (e.g., 0, 1, 2).";
+                            if (parseInt(text, 10) > 10) return "Please enter a valid number between 0 and 10";
+                            return null;
+                        },
+                        state.followers
+                    );
 
-        if (!motorsSelection) return;
+                    if (result === undefined) return; 
+                    if (result === BACK_BUTTON) { currentStep--; continue; } 
+                    
+                    state.followers = result;
+                    currentStep++;
+                    break;
+                }
 
-        const motorsType = motorMap[motorsSelection as keyof typeof motorMap];
+                case 4: {
+                    const items = Object.keys(motorMap).map(label => ({ label }));
+                    const result = await runQuickPickStep(currentStep, totalSteps, "Select Motor Controller", items);
 
-        const folderUri = await vscode.window.showOpenDialog({
-            canSelectFiles: false,
-            canSelectFolders: true,
-            canSelectMany: false,
-            openLabel: 'Select subsystem folder'
-        });
+                    if (result === undefined) return; 
+                    if (result === BACK_BUTTON) { currentStep--; continue; } 
+                    
+                    state.motors = result.label;
+                    currentStep++; 
+                    break;
+                }
 
-        if (!folderUri || folderUri.length === 0) return;
-
-        const selectedFolder = folderUri[0];
-
-        if (subsystemName && followerMotorCount) {
-            generateFiles(subsystemName, subsystemType, followerMotorCount, motorsType, selectedFolder);
+            }
         }
 
+        // Final Execution
+        const config = vscode.workspace.getConfiguration('frc-blueprint');
+        let savedPath = config.get<string>('subsystemsPath');
+        let targetFolderUri: vscode.Uri;
+
+        if (savedPath) {
+            // 1. If we found a saved path, convert the string back into a Uri
+            targetFolderUri = vscode.Uri.file(savedPath);
+        } else {
+            const folderUri = await vscode.window.showOpenDialog({
+                canSelectFiles: false,
+                canSelectFolders: true,
+                canSelectMany: false,
+                openLabel: 'Select subsystem folder'
+            });
+
+            if (!folderUri || folderUri.length === 0) return;
+
+            targetFolderUri = folderUri[0];
+
+            await config.update('subsystemsPath', targetFolderUri.fsPath, vscode.ConfigurationTarget.Workspace);
+
+            vscode.window.showInformationMessage("Subsystems folder saved for future use!");
+
+        }
+        
+        const finalSubsystemType = subsystemMap[state.type as keyof typeof subsystemMap];
+        const finalMotorType = motorMap[state.motors as keyof typeof motorMap];
+
+        if (state.name && state.followers) {
+            generateFiles(state.name, finalSubsystemType, state.followers, finalMotorType, targetFolderUri);
+        }
     });
 
     context.subscriptions.push(disposable);

@@ -17,7 +17,17 @@
         "command": "frc-blueprint.createSubsystem",
         "title": "FRC: Create New Subsystem"
       }
-    ]
+    ],
+    "configuration": {
+      "title": "FRC Blueprint",
+      "properties": {
+        "frc-blueprint.subsystemsPath": {
+          "type": "string",
+          "default": "",
+          "description": "The saved path to your FRC subsystems folder."
+        }
+      }
+    }
   },
   "scripts": {
     "vscode:prepublish": "npm run package",
