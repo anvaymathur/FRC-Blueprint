@@ -22,10 +22,10 @@ Instantly generate complete file structures for the most common FRC mechanisms. 
 ### Hardware-Specific Boilerplate
 Stop writing the same motor configuration code over and over. Select your motor controller type during setup, and the extension generates the correct configuration API, PID slots, and telemetry updates.
 * **Currently Supported:** CTRE TalonFX (Kraken X60, Falcon 500)
-* **In Development:** REV SPARK MAX (NEO, NEO 550)
+* **In Development:** REV SPARK MAX (NEO, NEO 550). It is visible in the setup flow, but generation is not available yet.
 
 ### Dynamic Follower Scaling
-Specify your exact follower motor count (from 0 to 10), and the EJS templating engine will automatically scale the generated Java files. It dynamically injects:
+Specify your exact follower motor count, and the EJS templating engine will automatically scale the generated Java files. It dynamically injects:
 * Follower instantiations and CAN ID parameters.
 * Opposed/Matching motor alignment configurations.
 * Mirrored telemetry signals and `StatusSignal` refresh loops.
@@ -43,15 +43,14 @@ Tired of clicking through the file explorer to find your `subsystems` folder? FR
 ### Prerequisites
 * **Visual Studio Code (WPILib):** Version `^1.102.0` or higher. It is highly recommended that you use the official **WPILib VS Code** installation provided by the FRC WPILib installer. You can download the latest release from the [WPILib GitHub Releases page](https://github.com/wpilibsuite/allwpilib/releases).
 * **FRC Toolchain:** Your project must be a Java-based WPILib project utilizing the **Command-Based Framework**.
-* **Dependencies:** Generated files assume the presence of `CTRE Phoenix 6`, `AdvantageKit`, and WPILib standard math/physics libraries.
+* **Dependencies:** TalonFX-generated files assume the presence of `CTRE Phoenix 6`, `AdvantageKit`, and WPILib standard math/physics libraries.
 
 ### Installation
-*(Note: As this extension is currently in local development, install via VSIX)*
-1. Download the `.vsix` package from the latest release.
-2. Open VS Code.
-3. Go to the Extensions view (`Ctrl+Shift+X`).
-4. Click the `...` menu in the top right and select **Install from VSIX**.
-5. Select the downloaded file.
+1. Open VS Code.
+2. Open the Extensions view (`Ctrl+Shift+X` or `Cmd+Shift+X`).
+3. Search for **FRC Blueprint** and select **Install**.
+
+You can also install it directly from the [Visual Studio Marketplace](https://marketplace.visualstudio.com/items?itemName=anvay-mathur.frc-blueprint). A `.vsix` download is not required for normal installation.
 
 ---
 
@@ -64,7 +63,7 @@ Generating a new subsystem takes less than 10 seconds.
 3. **Step 1:** Select the Mechanism Archetype (Linear, Pivoting, or Continuous).
 4. **Step 2:** Type the name of your subsystem (e.g., `Elevator`, `Wrist`, `Shooter`). Safe Java naming conventions (PascalCase/camelCase) are enforced.
 5. **Step 3:** Enter the number of follower motors attached to the mechanism (e.g., `0`, `1`, `2`).
-6. **Step 4:** Select your Motor Controller type (e.g., `TalonFX`).
+6. **Step 4:** Select your Motor Controller type. Choose `TalonFX` to generate files; SPARK MAX support is still in development.
 7. **Complete:** The extension generates the folder and files instantly.
 
 ### Example Output Structure
@@ -93,7 +92,7 @@ To change or reset this path, simply open your `.vscode/settings.json` file and 
 
 ## Known Issues & Limitations
 
-* **SPARK MAX Support:** Templates for REV SPARK MAX motor controllers are visible in the UI but will display a "Not Implemented Yet" warning. Support is slated for the next major release.
+* **SPARK MAX Support:** REV SPARK MAX is visible in the motor-controller selection UI, but its templates are not implemented yet. Selecting it displays a warning and does not generate a hardware IO implementation.
 * **Physics Tuning:** The generated `IOSim` files provide the structural boilerplate for simulation. However, you must manually tune the physical constants (e.g., Center of Gravity length, Mass, and Moment of Inertia) in the `Constants` file to make the simulation accurately reflect your specific robot's behavior.
 
 ---
